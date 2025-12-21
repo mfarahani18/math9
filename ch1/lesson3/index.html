@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جزوه ریاضی - فصل اول: مجموعه‌ها (درس سوم)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/shabnam-font@v5.0.1/dist/font-face.css" rel="stylesheet" type="text/css" />
+    <!-- فونت دست‌نویس انگلیسی برای Math Cafe -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- تنظیمات رنگی (آبی آسمانی) --- */
+        :root {
+            --primary-dark: #0284c7;   /* Sky 600 */
+            --primary-main: #0ea5e9;   /* Sky 500 */
+            --primary-light: #e0f2fe;  /* Sky 100 */
+            --accent: #f59e0b;         /* Amber 500 */
+            --text-main: #334155;      /* Slate 700 */
+            --bg-paper: #ffffff;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 20px 0;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* --- انیمیشن بخار فنجان --- */
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 0.8; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(-25px) scale(1.2); opacity: 0; }
+        }
+
+        .steam text {
+            animation: floatUp 3s infinite ease-out;
+            transform-origin: center;
+            opacity: 0;
+        }
+
+        .steam text:nth-child(1) { animation-delay: 0s; }
+        .steam text:nth-child(2) { animation-delay: 1.5s; }
+        .steam text:nth-child(3) { animation-delay: 0.5s; }
+        .steam text:nth-child(4) { animation-delay: 2s; }
+        .steam text:nth-child(5) { animation-delay: 1s; }
+        .steam text:nth-child(6) { animation-delay: 2.5s; }
+        .steam text:nth-child(7) { animation-delay: 0.8s; }
+        .steam text:nth-child(8) { animation-delay: 1.8s; }
+        .steam text:nth-child(9) { animation-delay: 1.2s; }
+
+        /* --- کانتینر صفحه A4 --- */
+        .page-container {
+            background: var(--bg-paper);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            position: relative;
+            overflow: visible; 
+            min-height: 297mm;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .portrait { width: 210mm; }
+        .landscape { width: 297mm; }
+
+        /* --- تنظیمات اختصاصی کادرها --- */
+        .input-wrapper { display: flex; gap: 0.5rem; align-items: center; }
+        #subject-input { width: 10rem; } 
+        #chapter-input { width: 4rem; }
+        #date-input { width: 8rem; }
+        .landscape #subject-input { width: 18rem !important; }
+        .landscape #chapter-input { width: 6rem !important; }
+        .landscape #date-input { width: 10rem !important; }
+        .landscape .input-wrapper { gap: 1.5rem; }
+
+        /* --- پترن‌ها --- */
+        .grid-pattern {
+            background-image: 
+                linear-gradient(#0ea5e915 1px, transparent 1px),
+                linear-gradient(90deg, #0ea5e915 1px, transparent 1px);
+            background-size: 25px 25px;
+            background-position: center 2px;
+        }
+        .line-pattern {
+            background-image: linear-gradient(#0ea5e915 1px, transparent 1px);
+            background-size: 100% 35px;
+            background-position: 0 35px;
+        }
+        .blank-pattern { background-image: none; }
+
+        /* --- هدر --- */
+        .header-graphic {
+            background: linear-gradient(135deg, var(--primary-main) 0%, var(--primary-dark) 100%);
+            position: relative;
+            color: white;
+            padding-bottom: 50px;
+            overflow: hidden;
+        }
+        .header-wave {
+            position: absolute; bottom: -1px; left: 0; width: 100%; height: auto;
+            color: var(--bg-paper); fill: currentColor; z-index: 2;
+        }
+
+        /* --- اینپوت‌های شیشه‌ای --- */
+        .glass-input-group { display: flex; flex-direction: column; align-items: center; z-index: 10; }
+        .glass-input {
+            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.4); color: white;
+            border-radius: 8px; transition: all 0.2s; text-align: center;
+            font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.3); outline: 2px solid var(--accent); border-color: transparent;
+        }
+        .input-label {
+            color: rgba(255, 255, 255, 0.95); font-size: 0.75rem; margin-bottom: 4px;
+            font-weight: bold; text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* --- واترمارک --- */
+        .watermark-container {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            width: 100%; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; pointer-events: none;
+            z-index: 0; opacity: 0.06;
+        }
+        .watermark-text {
+            font-size: 80px; font-weight: 900; color: var(--primary-dark);
+            white-space: nowrap; letter-spacing: -2px; line-height: 1.1; text-align: center;
+        }
+        .watermark-sub {
+            font-size: 90px; font-family: 'Dancing Script', cursive; font-weight: 700;
+            color: var(--primary-dark); letter-spacing: 0px; margin-top: 5px;
+        }
+
+        /* --- تایپوگرافی محتوا --- */
+        .ai-content {
+            font-family: 'Shabnam', 'Vazirmatn', sans-serif;
+            color: var(--text-main); line-height: 2.2; padding-bottom: 40px;
+        }
+        .ai-content h2 {
+            color: var(--primary-dark); font-size: 1.3rem; font-weight: 900;
+            margin-top: 2rem; margin-bottom: 1rem; border-bottom: 3px solid var(--primary-light);
+            display: inline-block; padding-bottom: 4px;
+        }
+        .ai-content h3 {
+             color: var(--primary-main); font-size: 1.1rem; font-weight: 800;
+             margin-top: 1.5rem; margin-bottom: 0.5rem;
+        }
+        .ai-content p { margin-bottom: 0.8rem; text-align: justify; font-size: 0.95rem; }
+        .ai-content strong { color: #0369a1; font-weight: 900; }
+        .ai-content ul { list-style-type: none; padding-right: 0; }
+        .ai-content li { position: relative; padding-right: 1.5rem; margin-bottom: 0.5rem; }
+        .ai-content li::before {
+            content: "•"; color: var(--primary-main); font-size: 1.5rem;
+            position: absolute; right: 0; top: -5px;
+        }
+        /* کلاس کمکی برای جهت اعداد انگلیسی/ریاضی */
+        .math-ltr {
+            direction: ltr;
+            display: inline-block;
+            unicode-bidi: embed;
+            font-family: 'Times New Roman', serif;
+            font-weight: bold;
+        }
+        .ai-content .formula-box {
+            background: #f0f9ff; border: 2px dashed #7dd3fc; border-radius: 12px;
+            padding: 1rem; margin: 1rem 0; font-size: 1rem; line-height: 2;
+        }
+        .ai-content .example-box {
+            background-color: #f8fafc; border-right: 4px solid var(--accent);
+            padding: 10px 15px; margin: 15px 0; border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .ai-content .question-title {
+            color: #b45309; font-weight: bold; display: block; margin-bottom: 5px;
+            margin-top: 15px;
+        }
+        /* استایل برای نمودارهای ون */
+        .venn-container {
+            display: flex; justify-content: center; margin: 10px 0;
+        }
+        .venn-svg { width: 120px; height: 80px; }
+        .venn-circle { fill: rgba(14, 165, 233, 0.2); stroke: #0284c7; stroke-width: 2; }
+        .venn-label { font-size: 12px; font-weight: bold; fill: #334155; }
+        .venn-fill-intersect { fill: rgba(245, 158, 11, 0.5); }
+        .venn-fill-union { fill: rgba(14, 165, 233, 0.5); }
+        .venn-fill-diff { fill: rgba(245, 158, 11, 0.5); }
+
+        /* --- فوتر --- */
+        .footer-strip {
+            border-top: 3px solid var(--primary-dark);
+            background: #f8fafc;
+        }
+
+        /* --- تنظیمات حیاتی پرینت (هدر/فوتر ثابت و شماره صفحه) --- */
+        @page {
+            size: auto;
+            /* حاشیه بالا و پایین برای هدر و فوتر ثابت */
+            margin-top: 140px;
+            margin-bottom: 70px;
+            margin-left: 10mm;
+            margin-right: 10mm;
+
+            /* شماره گذاری صفحات استاندارد برای مرورگرهایی که پشتیبانی می‌کنند (مانند Firefox) */
+            @bottom-center {
+                content: "صفحه " counter(page);
+                font-family: 'Vazirmatn';
+                font-size: 9pt;
+            }
+        }
+
+        @page :has(.landscape) { size: landscape; }
+
+        @media print {
+            html, body {
+                width: 100%; height: 100%; margin: 0; padding: 0; background-color: white;
+            }
+            .no-print { display: none !important; }
+
+            .page-container {
+                margin: 0; padding: 0; box-shadow: none; border: none;
+                page-break-after: always; print-color-adjust: exact;
+                -webkit-print-color-adjust: exact; overflow: visible !important;
+                height: auto !important; min-height: auto; display: block;
+                width: 100% !important;
+            }
+
+            /* هدر ثابت با تکنیک مارجین منفی */
+            .header-graphic {
+                position: fixed; top: 0; left: 0; right: 0;
+                height: 120px; margin-top: -140px;
+                z-index: 1000; padding-bottom: 0;
+            }
+            .header-graphic .header-wave { bottom: -2px; }
+
+            /* فوتر ثابت */
+            .footer-strip {
+                position: fixed; bottom: 0; left: 0; right: 0;
+                height: 60px; margin-bottom: -70px;
+                z-index: 1000;
+            }
+
+            /* واترمارک ثابت */
+            .watermark-container {
+                position: fixed; top: 50%; left: 50%;
+                transform: translate(-50%, -50%) rotate(-45deg);
+                z-index: -1; opacity: 0.06; width: 100%;
+            }
+
+            h2 { page-break-before: auto; }
+            .example-box { page-break-inside: avoid; }
+            .ai-content { padding-top: 20px; }
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center">
+
+    <!-- نوار ابزار کنترل -->
+    <div class="no-print fixed top-4 right-4 bg-white/95 backdrop-blur shadow-2xl rounded-2xl z-50 p-3 border border-slate-200 flex flex-col gap-3 w-16 hover:w-auto hover:px-4 transition-all group overflow-hidden">
+        <button onclick="toggleOrientation()" title="تغییر جهت کاغذ" class="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-100 text-slate-600 transition w-full justify-center group-hover:justify-start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>
+            <span class="hidden group-hover:inline whitespace-nowrap text-sm">چرخش کاغذ</span>
+        </button>
+        <button onclick="togglePattern()" title="تغییر نوع خط‌کشی" class="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-100 text-slate-600 transition w-full justify-center group-hover:justify-start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+            <span class="hidden group-hover:inline whitespace-nowrap text-sm">تغییر خطوط</span>
+        </button>
+        <button onclick="clearContent()" title="پاک کردن محتوا" class="flex items-center gap-3 p-2 rounded-xl hover:bg-red-50 text-red-500 transition w-full justify-center group-hover:justify-start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+            <span class="hidden group-hover:inline whitespace-nowrap text-sm">پاک کردن</span>
+        </button>
+        <button onclick="window.print()" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white px-2 py-2 rounded-xl transition shadow-sm font-bold w-full justify-center group-hover:justify-start mt-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            <span class="hidden group-hover:inline whitespace-nowrap text-sm">چاپ PDF</span>
+        </button>
+    </div>
+
+    <!-- صفحه جزوه -->
+    <div id="page" class="page-container portrait">
+        
+        <!-- هدر گرافیکی (ثابت در تمام صفحات پرینت) -->
+        <header class="header-graphic pt-8 px-8 relative">
+            <div class="flex flex-row justify-between items-center relative z-10 w-full h-24">
+                <div class="flex items-center gap-4 shrink-0">
+                    <div class="w-16 h-16 flex items-center justify-center filter drop-shadow-md shrink-0">
+                         <svg viewBox="0 0 100 100" width="70" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M75 45 Q 95 45 95 60 Q 95 75 75 75" fill="none" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M20 40 Q 20 95 50 95 Q 80 95 80 40" fill="white" stroke="white" stroke-width="2"/>
+                            <line x1="15" y1="95" x2="85" y2="95" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                            <g class="steam">
+                                <text x="40" y="36" font-family="sans-serif" font-size="12" fill="white" font-weight="bold">+</text>
+                                <text x="60" y="36" font-family="serif" font-size="12" fill="white" font-weight="bold">√</text>
+                                <text x="50" y="28" font-family="serif" font-size="14" fill="white" font-weight="bold">π</text>
+                                <text x="30" y="28" font-family="sans-serif" font-size="10" fill="white" font-weight="bold">۲</text>
+                                <text x="70" y="28" font-family="sans-serif" font-size="10" fill="white" font-weight="bold">۵</text>
+                                <text x="35" y="20" font-family="serif" font-size="10" fill="white" font-weight="bold">∫</text>
+                                <text x="50" y="20" font-family="serif" font-size="12" fill="white" font-weight="bold">φ</text>
+                                <text x="65" y="20" font-family="serif" font-size="10" fill="white" font-weight="bold">÷</text>
+                                <text x="50" y="12" font-family="sans-serif" font-size="11" fill="white" font-weight="bold">۱۹</text>
+                            </g>
+                            <text x="50" y="70" font-family="'Dancing Script', cursive" font-size="12" fill="#0ea5e9" text-anchor="middle" font-weight="bold">Math Cafe</text>
+                        </svg>
+                    </div>
+                    <div class="shrink-0">
+                        <h1 class="text-4xl font-black tracking-tight text-white drop-shadow-md whitespace-nowrap" style="text-shadow: 0 2px 4px rgba(0,0,0,0.15);">کافه ریاضی</h1>
+                        <span class="text-sky-100 text-sm font-bold opacity-90 block mt-2 whitespace-nowrap">Mathematics Note</span>
+                    </div>
+                </div>
+                <div class="input-wrapper shrink-0">
+                    <div class="glass-input-group">
+                        <span class="input-label">موضوع</span>
+                        <div id="subject-input" class="glass-input h-10 flex items-center justify-center cursor-text" contenteditable="true">مجموعه‌ها</div>
+                    </div>
+                    <div class="glass-input-group">
+                        <span class="input-label">فصل</span>
+                        <div id="chapter-input" class="glass-input h-10 flex items-center justify-center" contenteditable="true">اول</div>
+                    </div>
+                    <div class="glass-input-group">
+                        <span class="input-label">تاریخ</span>
+                        <div id="date-input" class="glass-input h-10 flex items-center justify-center" contenteditable="true">/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/</div>
+                    </div>
+                </div>
+            </div>
+            <svg class="header-wave" viewBox="0 0 1440 120" preserveAspectRatio="none">
+                <path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,85.3C672,75,768,85,864,90.7C960,96,1056,96,1152,85.3C1248,75,1344,53,1392,42.7L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </header>
+
+        <!-- بدنه اصلی -->
+        <main id="main-content" class="flex-grow w-full relative z-10 blank-pattern px-8 py-4">
+            <!-- واترمارک ثابت در تمام صفحات -->
+            <div class="watermark-container">
+                <div class="watermark-text">استاد فراهانی</div>
+                <div class="watermark-sub">Math Cafe</div>
+            </div>
+
+            <div id="ai-output" class="ai-content relative z-10 h-full">
+                
+                <h2>درس سوم: اجتماع، اشتراک و تفاضل مجموعه‌ها</h2>
+
+                <h3>۱. درس‌نامه و مفاهیم اولیه</h3>
+                <p>در این درس با سه عمل اصلی روی مجموعه‌ها آشنا می‌شویم که به ما کمک می‌کنند ارتباط بین دسته‌های مختلف اعداد یا اشیاء را بررسی کنیم.</p>
+
+                <div class="formula-box">
+                    <strong>الف) اشتراک مجموعه‌ها (Intersection)</strong><br>
+                    اشتراک دو مجموعه <span class="math-ltr">A</span> و <span class="math-ltr">B</span>، شامل عضوهایی است که هم در <span class="math-ltr">A</span> و هم در <span class="math-ltr">B</span> باشند (عضوهای مشترک).<br>
+                    <strong>نماد:</strong> <span class="math-ltr">A ∩ B</span> (خوانده می‌شود: آ اشتراک بی)<br>
+                    <strong>تعریف ریاضی:</strong> <span class="math-ltr">{x | x ∈ A , x ∈ B}</span><br>
+                    <strong>نکته:</strong> اگر دو مجموعه هیچ عضو مشترکی نداشته باشند، اشتراک آن‌ها مجموعه تهی (<span class="math-ltr">∅</span>) است و به آن دو مجموعه «جدا از هم» می‌گویند.<br>
+                    <div class="venn-container">
+                        <svg class="venn-svg" viewBox="0 0 100 60">
+                            <circle cx="35" cy="30" r="25" class="venn-circle" fill="none"></circle>
+                            <circle cx="65" cy="30" r="25" class="venn-circle" fill="none"></circle>
+                            <path d="M 65,30 A 25,25 0 0,0 50,7.6 A 25,25 0 0,0 35,30 A 25,25 0 0,0 50,52.4 A 25,25 0 0,0 65,30 Z" class="venn-fill-intersect"></path>
+                            <text x="25" y="35" class="venn-label">A</text>
+                            <text x="70" y="35" class="venn-label">B</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="formula-box">
+                    <strong>ب) اجتماع مجموعه‌ها (Union)</strong><br>
+                    اجتماع دو مجموعه <span class="math-ltr">A</span> و <span class="math-ltr">B</span>، شامل تمام عضوهایی است که یا در <span class="math-ltr">A</span> باشند یا در <span class="math-ltr">B</span> یا در هر دو. به زبان ساده، همه عضوها را روی هم می‌ریزیم (تکراری‌ها را فقط یک‌بار می‌نویسیم).<br>
+                    <strong>نماد:</strong> <span class="math-ltr">A ∪ B</span> (خوانده می‌شود: آ اجتماع بی)<br>
+                    <strong>تعریف ریاضی:</strong> <span class="math-ltr">{x | x ∈ A یا x ∈ B}</span><br>
+                    <strong>نکته:</strong> اگر <span class="math-ltr">A ⊆ B</span> باشد، آنگاه <span class="math-ltr">A ∪ B = B</span> و <span class="math-ltr">A ∩ B = A</span>.<br>
+                    <div class="venn-container">
+                        <svg class="venn-svg" viewBox="0 0 100 60">
+                            <circle cx="35" cy="30" r="25" class="venn-circle venn-fill-union"></circle>
+                            <circle cx="65" cy="30" r="25" class="venn-circle venn-fill-union"></circle>
+                            <text x="25" y="35" class="venn-label">A</text>
+                            <text x="70" y="35" class="venn-label">B</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="formula-box">
+                    <strong>ج) تفاضل مجموعه‌ها (Difference)</strong><br>
+                    تفاضل مجموعه <span class="math-ltr">A</span> از <span class="math-ltr">B</span> (یا <span class="math-ltr">A</span> منهای <span class="math-ltr">B</span>)، شامل عضوهایی است که در <span class="math-ltr">A</span> باشند ولی در <span class="math-ltr">B</span> نباشند.<br>
+                    <strong>نماد:</strong> <span class="math-ltr">A - B</span> (خوانده می‌شود: آ منهای بی)<br>
+                    <strong>تعریف ریاضی:</strong> <span class="math-ltr">{x | x ∈ A , x ∉ B}</span><br>
+                    <strong>نکته مهم:</strong> عمل تفاضل خاصیت جابه‌جایی ندارد؛ یعنی معمولاً <span class="math-ltr">A - B ≠ B - A</span>.<br>
+                    <div class="venn-container">
+                        <svg class="venn-svg" viewBox="0 0 100 60">
+                            <circle cx="35" cy="30" r="25" class="venn-circle venn-fill-diff"></circle>
+                            <circle cx="65" cy="30" r="25" class="venn-circle" fill="#fff"></circle>
+                            <circle cx="65" cy="30" r="25" class="venn-circle" fill="none"></circle> 
+                            <circle cx="35" cy="30" r="25" class="venn-circle" fill="none"></circle>
+                            <text x="25" y="35" class="venn-label">A</text>
+                            <text x="70" y="35" class="venn-label">B</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <h3>۲. مثال‌های آموزشی (از ساده به سخت)</h3>
+                
+                <div class="example-box">
+                    <p><strong>مثال ۱:</strong> اگر <span class="math-ltr">A = {۱, ۲, ۳}</span> و <span class="math-ltr">B = {۳, ۴, ۵}</span> باشد، حاصل <span class="math-ltr">A ∩ B</span> چیست؟<br>
+                    <strong>پاسخ:</strong> تنها عضو مشترک عدد ۳ است. پس <span class="math-ltr">{۳}</span>.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۲:</strong> با توجه به مجموعه‌های مثال قبل، حاصل <span class="math-ltr">A ∪ B</span> را بنویسید.<br>
+                    <strong>پاسخ:</strong> همه عضوها را می‌نویسیم (۳ را تکرار نمی‌کنیم): <span class="math-ltr">{۱, ۲, ۳, ۴, ۵}</span>.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۳:</strong> حاصل <span class="math-ltr">A - B</span> و <span class="math-ltr">B - A</span> را برای مجموعه‌های بالا به دست آورید.<br>
+                    <strong>پاسخ:</strong><br>
+                    <span class="math-ltr">A - B</span>: عضوهایی که در <span class="math-ltr">A</span> هستند ولی در <span class="math-ltr">B</span> نیستند → <span class="math-ltr">{۱, ۲}</span><br>
+                    <span class="math-ltr">B - A</span>: عضوهایی که در <span class="math-ltr">B</span> هستند ولی در <span class="math-ltr">A</span> نیستند → <span class="math-ltr">{۴, ۵}</span></p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۴:</strong> اگر <span class="math-ltr">A ⊆ B</span> باشد، حاصل <span class="math-ltr">A - B</span> چیست؟<br>
+                    <strong>پاسخ:</strong> چون تمام اعضای <span class="math-ltr">A</span> داخل <span class="math-ltr">B</span> هستند، عضوی در <span class="math-ltr">A</span> وجود ندارد که در <span class="math-ltr">B</span> نباشد. پس حاصل <span class="math-ltr">∅</span> (تهی) است.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۵:</strong> اشتراک مجموعه اعداد طبیعی (<span class="math-ltr">ℕ</span>) و اعداد صحیح (<span class="math-ltr">ℤ</span>) چیست؟<br>
+                    <strong>پاسخ:</strong> چون تمام اعداد طبیعی زیرمجموعه اعداد صحیح هستند (<span class="math-ltr">ℕ ⊆ ℤ</span>)، اشتراک آن‌ها همان مجموعه کوچکتر یعنی <span class="math-ltr">ℕ</span> می‌شود.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۶:</strong> اگر <span class="math-ltr">A</span> مجموعه اعداد اول یک‌رقمی و <span class="math-ltr">B</span> مجموعه اعداد فرد یک‌رقمی باشد، <span class="math-ltr">A - B</span> را بیابید.<br>
+                    <strong>پاسخ:</strong><br>
+                    <span class="math-ltr">A = {۲, ۳, ۵, ۷}</span><br>
+                    <span class="math-ltr">B = {۱, ۳, ۵, ۷, ۹}</span><br>
+                    عضوی که در <span class="math-ltr">A</span> باشد و در <span class="math-ltr">B</span> نباشد، فقط عدد ۲ است. جواب: <span class="math-ltr">{۲}</span>.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۷:</strong> اگر <span class="math-ltr">A = ∅</span> و <span class="math-ltr">B = {۱, ۲}</span> باشد، حاصل <span class="math-ltr">A ∪ B</span> و <span class="math-ltr">A ∩ B</span> چیست؟<br>
+                    <strong>پاسخ:</strong><br>
+                    اجتماع با تهی، خود مجموعه می‌شود: <span class="math-ltr">{۱, ۲}</span>.<br>
+                    اشتراک با تهی، همیشه تهی است: <span class="math-ltr">∅</span>.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۸:</strong> ناحیه سایه‌زده شده در نمودار ون زیر نشان‌دهنده‌ی چیست؟ (فرض کنید دایره چپ <span class="math-ltr">A</span> و راست <span class="math-ltr">B</span> است و فقط وسط رنگ شده).<br>
+                    <strong>پاسخ:</strong> قسمت مشترک دو دایره، نشان‌دهنده <span class="math-ltr">A ∩ B</span> است.<br>
+                    <div class="venn-container">
+                        <svg class="venn-svg" viewBox="0 0 100 60">
+                            <circle cx="35" cy="30" r="25" class="venn-circle" fill="none"></circle>
+                            <circle cx="65" cy="30" r="25" class="venn-circle" fill="none"></circle>
+                            <path d="M 65,30 A 25,25 0 0,0 50,7.6 A 25,25 0 0,0 35,30 A 25,25 0 0,0 50,52.4 A 25,25 0 0,0 65,30 Z" class="venn-fill-intersect"></path>
+                            <text x="25" y="35" class="venn-label">A</text>
+                            <text x="70" y="35" class="venn-label">B</text>
+                        </svg>
+                    </div>
+                    </p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۹:</strong> مجموعه <span class="math-ltr">A</span> مضارب طبیعی ۳ و مجموعه <span class="math-ltr">B</span> مضارب طبیعی ۴ هستند. کوچک‌ترین عضو مجموعه <span class="math-ltr">A ∩ B</span> چیست؟<br>
+                    <strong>پاسخ:</strong> اشتراک مضارب ۳ و ۴، مضارب ۱۲ هستند (<span class="math-ltr">۳ × ۴</span>). کوچک‌ترین مضرب طبیعی ۱۲، خود عدد ۱۲ است.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۱۰:</strong> اگر <span class="math-ltr">A={۱, ۲}</span> و <span class="math-ltr">B={۲, ۳}</span> و <span class="math-ltr">C={۳, ۴}</span> باشند، حاصل <span class="math-ltr">(A ∪ B) - C</span> را بیابید.<br>
+                    <strong>پاسخ:</strong><br>
+                    ابتدا داخل پرانتز: <span class="math-ltr">A ∪ B = {۱, ۲, ۳}</span>.<br>
+                    حالا منهای <span class="math-ltr">C</span>: از <span class="math-ltr">{۱, ۲, ۳}</span> باید عضوهای مشترک با <span class="math-ltr">C</span> (یعنی ۳) را حذف کنیم.<br>
+                    جواب: <span class="math-ltr">{۱, ۲}</span>.</p>
+                </div>
+
+                <h3>۳. نمونه سؤالات تشریحی حل‌شده (گام‌به‌گام)</h3>
+
+                <p class="question-title">سؤال ۱:</p>
+                <p>اگر <span class="math-ltr">A = {x ∈ ℤ | -۲ < x ≤ ۱}</span> و <span class="math-ltr">B = {x ∈ ℕ | x < ۳}</span> باشد، مجموعه‌های <span class="math-ltr">A ∪ B</span> و <span class="math-ltr">A ∩ B</span> را با اعضا بنویسید.<br>
+                <strong>حل:</strong><br>
+                مرحله ۱ (نوشتن اعضا):<br>
+                <span class="math-ltr">A = {-۱, ۰, ۱}</span> (دقت کنید -۲ نیست چون مساوی ندارد، ۱ هست).<br>
+                <span class="math-ltr">B = {۱, ۲}</span> (اعداد طبیعی کمتر از ۳).<br>
+                مرحله ۲ (اجتماع): <span class="math-ltr">{ -۱, ۰, ۱, ۲ }</span>.<br>
+                مرحله ۳ (اشتراک): تنها عضو مشترک ۱ است. → <span class="math-ltr">{۱}</span>.</p>
+
+                <p class="question-title">سؤال ۲:</p>
+                <p>با توجه به نمودار ون، اگر <span class="math-ltr">A</span> زیرمجموعه <span class="math-ltr">B</span> باشد (<span class="math-ltr">A ⊆ B</span>)، حاصل <span class="math-ltr">(A ∩ B) - A</span> را ساده کنید.<br>
+                <strong>حل:</strong><br>
+                چون <span class="math-ltr">A ⊆ B</span> است، پس اشتراک آن‌ها برابر با مجموعه کوچکتر یعنی <span class="math-ltr">A</span> می‌شود (<span class="math-ltr">A ∩ B = A</span>).<br>
+                حالا باید حاصل <span class="math-ltr">A - A</span> را حساب کنیم.<br>
+                هر مجموعه‌ای منهای خودش برابر تهی است.<br>
+                پاسخ نهایی: <span class="math-ltr">∅</span>.</p>
+
+                <p class="question-title">سؤال ۳:</p>
+                <p>اگر <span class="math-ltr">A = {۲, ۳, ۴, ۵}</span> و <span class="math-ltr">B = {۴, ۵, ۶, ۷}</span> باشد، آیا تساوی <span class="math-ltr">(A-B) ∪ (B-A) = (A ∪ B) - (A ∩ B)</span> برقرار است؟ (بررسی کنید).<br>
+                <strong>حل:</strong><br>
+                سمت چپ:<br>
+                <span class="math-ltr">A-B = {۲, ۳}</span><br>
+                <span class="math-ltr">B-A = {۶, ۷}</span><br>
+                اجتماع این‌ها: <span class="math-ltr">{۲, ۳, ۶, ۷}</span>.<br>
+                سمت راست:<br>
+                <span class="math-ltr">A ∪ B = {۲, ۳, ۴, ۵, ۶, ۷}</span><br>
+                <span class="math-ltr">A ∩ B = {۴, ۵}</span><br>
+                تفاضل (حذف ۴ و ۵ از اجتماع): <span class="math-ltr">{۲, ۳, ۶, ۷}</span>.<br>
+                پاسخ: بله، دو طرف برابر شدند.</p>
+
+                <p class="question-title">سؤال ۴:</p>
+                <p>دو مجموعه <span class="math-ltr">A</span> و <span class="math-ltr">B</span> را طوری بنویسید که <span class="math-ltr">A ∩ B = {۲, ۳}</span> و <span class="math-ltr">A - B = {۱}</span> و <span class="math-ltr">B - A = {۴, ۵}</span>.<br>
+                <strong>حل:</strong><br>
+                مجموعه <span class="math-ltr">A</span> باید شامل قسمت مشترک و قسمت اختصاصی خودش باشد: <span class="math-ltr">A = {۲, ۳, ۱}</span>.<br>
+                مجموعه <span class="math-ltr">B</span> باید شامل قسمت مشترک و قسمت اختصاصی خودش باشد: <span class="math-ltr">B = {۲, ۳, ۴, ۵}</span>.</p>
+
+                <p class="question-title">سؤال ۵:</p>
+                <p>اگر <span class="math-ltr">U = {۱, ۲, ۳, ۴, ۵}</span> (مجموعه مرجع) و <span class="math-ltr">A = {۱, ۲}</span> باشد، مجموعه <span class="math-ltr">A'</span> (متمم A یا همان <span class="math-ltr">U-A</span>) را بنویسید.<br>
+                <strong>حل:</strong><br>
+                مفهوم <span class="math-ltr">U-A</span> یعنی عضوهایی که در مرجع هستند ولی در <span class="math-ltr">A</span> نیستند.<br>
+                حذف ۱ و ۲ از <span class="math-ltr">U</span>.<br>
+                پاسخ: <span class="math-ltr">{۳, ۴, ۵}</span>.</p>
+
+                <p class="question-title">سؤال ۶:</p>
+                <p>در یک کلاس ۳۰ نفره، ۱۵ نفر عضو تیم فوتبال و ۱۲ نفر عضو تیم والیبال هستند. اگر ۵ نفر عضو هر دو تیم باشند:<br>
+                الف) چند نفر فقط فوتبال بازی می‌کنند؟<br>
+                ب) چند نفر عضو هیچ تیمی نیستند؟<br>
+                <strong>حل:</strong><br>
+                فرض کنیم <span class="math-ltr">F</span> فوتبال و <span class="math-ltr">V</span> والیبال باشد. <span class="math-ltr">n(F ∩ V) = ۵</span>.<br>
+                الف) فقط فوتبال (<span class="math-ltr">F - V</span>): کل فوتبال (۱۵) منهای مشترک (۵) = ۱۰ نفر.<br>
+                فقط والیبال (<span class="math-ltr">V - F</span>): کل والیبال (۱۲) منهای مشترک (۵) = ۷ نفر.<br>
+                ب) کل کسانی که ورزش می‌کنند (<span class="math-ltr">n(F ∪ V)</span>): ۱۰ (فقط فوتبال) + ۷ (فقط والیبال) + ۵ (مشترک) = ۲۲ نفر.<br>
+                کسانی که ورزش نمی‌کنند: کل کلاس (۳۰) منهای ورزشکاران (۲۲) = ۸ نفر.</p>
+
+                <p class="question-title">سؤال ۷:</p>
+                <p>مجموعه <span class="math-ltr">C = {x | x ∈ ℕ, ۱۲/x ∈ ℕ}</span> را با اعضا مشخص کنید.<br>
+                <strong>حل:</strong><br>
+                عبارت <span class="math-ltr">۱۲/x ∈ ℕ</span> یعنی <span class="math-ltr">x</span> باید شمارنده (مقسوم‌علیه) عدد ۱۲ باشد.<br>
+                شمارنده‌های طبیعی ۱۲: ۱، ۲، ۳، ۴، ۶، ۱۲.<br>
+                پاسخ: <span class="math-ltr">{۱, ۲, ۳, ۴, ۶, ۱۲}</span>.</p>
+
+                <p class="question-title">سؤال ۸:</p>
+                <p>اگر <span class="math-ltr">A</span> مجموعه‌ی اعداد زوج طبیعی و <span class="math-ltr">B</span> مجموعه‌ی اعداد فرد طبیعی باشد، <span class="math-ltr">A ∩ B</span> و <span class="math-ltr">A - B</span> چیست؟<br>
+                <strong>حل:</strong><br>
+                هیچ عددی هم‌زمان هم زوج و هم فرد نیست. پس اشتراک تهی است (<span class="math-ltr">A ∩ B = ∅</span>).<br>
+                اگر از اعداد زوج، اعداد فرد را برداریم، هیچ‌چیز کم نمی‌شود چون اشتراکی ندارند. پس خود اعداد زوج باقی می‌مانند.<br>
+                پاسخ: <span class="math-ltr">A ∩ B = ∅</span> و <span class="math-ltr">A - B = A</span>.</p>
+
+                <p class="question-title">سؤال ۹:</p>
+                <p>اگر <span class="math-ltr">A = {۱, {۱}}</span> و <span class="math-ltr">B = {۱}</span> باشد، <span class="math-ltr">A - B</span> چند عضو دارد؟<br>
+                <strong>حل:</strong><br>
+                اعضای <span class="math-ltr">A</span>: عدد ۱ و مجموعه <span class="math-ltr">{۱}</span>.<br>
+                اعضای <span class="math-ltr">B</span>: عدد ۱.<br>
+                باید عدد ۱ را از <span class="math-ltr">A</span> حذف کنیم. عضو باقی‌مانده <span class="math-ltr">{۱}</span> است.<br>
+                مجموعه حاصل: <span class="math-ltr">{ {۱} }</span>.<br>
+                پاسخ: ۱ عضو دارد.</p>
+
+                <p class="question-title">سؤال ۱۰:</p>
+                <p>حاصل عبارت <span class="math-ltr">(A ∪ ∅) ∩ (B ∪ B)</span> را ساده کنید.<br>
+                <strong>حل:</strong><br>
+                <span class="math-ltr">A ∪ ∅ = A</span> (اجتماع هر مجموعه با تهی خودش است).<br>
+                <span class="math-ltr">B ∪ B = B</span> (اجتماع هر مجموعه با خودش خودش است).<br>
+                پاسخ: <span class="math-ltr">A ∩ B</span>.</p>
+
+                <h3>۴. تمرین‌های دانش‌آموزی (بدون پاسخ)</h3>
+                <ul>
+                    <li>۱. اگر <span class="math-ltr">A = {a, b, c, d}</span> و <span class="math-ltr">B = {c, d, e, f}</span> باشد، <span class="math-ltr">A ∪ B</span> و <span class="math-ltr">A ∩ B</span> را بنویسید.</li>
+                    <li>۲. با توجه به سوال قبل، <span class="math-ltr">(A - B) ∪ (B - A)</span> را به دست آورید.</li>
+                    <li>۳. اگر <span class="math-ltr">A ⊆ B</span> باشد، حاصل <span class="math-ltr">(A ∪ B) - A</span> برابر با کدام مجموعه است؟ (<span class="math-ltr">A</span>، <span class="math-ltr">B</span> یا <span class="math-ltr">B-A</span>)؟</li>
+                    <li>۴. مجموعه‌ی اعداد طبیعی کمتر از ۱۰ را <span class="math-ltr">A</span> و مجموعه‌ی اعداد اول یک‌رقمی را <span class="math-ltr">B</span> می‌نامیم. نمودار ون آن‌ها را رسم کنید و اعضای <span class="math-ltr">A - B</span> را مشخص کنید.</li>
+                    <li>۵. اگر <span class="math-ltr">A</span> بازه اعداد صحیح بین -۳ و ۳ (بدون خودشان) باشد و <span class="math-ltr">B = {۰, ۱, ۲, ۳, ۴}</span>، اشتراک آن‌ها چند عضو دارد؟</li>
+                    <li>۶. درستی رابطه <span class="math-ltr">A - B = A ∩ B'</span> را با یک مثال بررسی کنید. (راهنمایی: <span class="math-ltr">B'</span> یعنی متمم <span class="math-ltr">B</span>).</li>
+                    <li>۷. اگر اشتراک دو مجموعه <span class="math-ltr">A</span> و <span class="math-ltr">B</span> برابر با خود مجموعه <span class="math-ltr">A</span> باشد، چه نتیجه‌ای در مورد رابطه این دو مجموعه می‌گیریم؟</li>
+                    <li>۸. حاصل عبارت <span class="math-ltr">{۱, ۲, ۳} - {۲, ۳, ۴, ۵}</span> را بنویسید.</li>
+                    <li>۹. اگر <span class="math-ltr">A</span> مجموعه مضارب ۳ و <span class="math-ltr">B</span> مجموعه مضارب ۵ باشد، پنجمین عضو مجموعه <span class="math-ltr">A ∩ B</span> چیست؟</li>
+                    <li>۱۰. در یک کلاس، همه دانش‌آموزان یا عینک دارند یا ساعت (یا هر دو). اگر ۲۰ نفر عینک و ۱۵ نفر ساعت داشته باشند و کلاس ۳۰ نفر باشد، چند نفر هم ساعت و هم عینک دارند؟</li>
+                </ul>
+
+                <h3>۵. تست‌های چهارگزینه‌ای حل‌شده</h3>
+                
+                <div class="example-box">
+                    <p><strong>تست ۱:</strong> اگر <span class="math-ltr">A = {۱, ۲, ۳}</span> و <span class="math-ltr">B ⊆ A</span> باشد، آنگاه حاصل <span class="math-ltr">A ∪ B</span> کدام است؟<br>
+                    الف) <span class="math-ltr">B</span> &nbsp;&nbsp;&nbsp; ب) <span class="math-ltr">A</span> &nbsp;&nbsp;&nbsp; ج) <span class="math-ltr">{۱, ۲}</span> &nbsp;&nbsp;&nbsp; د) <span class="math-ltr">∅</span><br>
+                    <strong>پاسخ تشریحی:</strong> وقتی <span class="math-ltr">B</span> زیرمجموعه <span class="math-ltr">A</span> است، یعنی تمام اعضای <span class="math-ltr">B</span> درون <span class="math-ltr">A</span> هستند. پس ریختن اعضای <span class="math-ltr">B</span> روی <span class="math-ltr">A</span> (اجتماع)، چیزی به <span class="math-ltr">A</span> اضافه نمی‌کند. حاصل همان <span class="math-ltr">A</span> است. گزینه صحیح: ب
+                    </p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۲:</strong> تعداد اعضای مجموعه <span class="math-ltr">(A - B) ∪ (B - A)</span> برای <span class="math-ltr">A={۱, ۲, ۳, ۴}</span> و <span class="math-ltr">B={۳, ۴, ۵, ۶}</span> چقدر است؟<br>
+                    الف) ۲ &nbsp;&nbsp;&nbsp; ب) ۴ &nbsp;&nbsp;&nbsp; ج) ۶ &nbsp;&nbsp;&nbsp; د) ۸<br>
+                    <strong>پاسخ تشریحی:</strong> <span class="math-ltr">A - B = {۱, ۲}</span> و <span class="math-ltr">B - A = {۵, ۶}</span>. اجتماع این‌ها <span class="math-ltr">{۱, ۲, ۵, ۶}</span> است که ۴ عضو دارد. گزینه صحیح: ب
+                    </p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۳:</strong> اگر <span class="math-ltr">A ∩ B = ∅</span> باشد، حاصل <span class="math-ltr">A - B</span> کدام است؟<br>
+                    الف) <span class="math-ltr">A</span> &nbsp;&nbsp;&nbsp; ب) <span class="math-ltr">B</span> &nbsp;&nbsp;&nbsp; ج) <span class="math-ltr">∅</span> &nbsp;&nbsp;&nbsp; د) <span class="math-ltr">B - A</span><br>
+                    <strong>پاسخ تشریحی:</strong> وقتی اشتراک تهی است، یعنی هیچ عضو مشترکی ندارند. پس حذف کردن <span class="math-ltr">B</span> از <span class="math-ltr">A</span>، هیچ عضوی از <span class="math-ltr">A</span> را کم نمی‌کند. گزینه صحیح: الف
+                    </p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۴:</strong> ناحیه رنگی در نمودار ون مقابل (فرض کنید کل <span class="math-ltr">A</span> رنگ شده ولی قسمت مشترک با <span class="math-ltr">B</span> سفید است) نشان‌دهنده کدام است؟<br>
+                    الف) <span class="math-ltr">A ∪ B</span> &nbsp;&nbsp;&nbsp; ب) <span class="math-ltr">A ∩ B</span> &nbsp;&nbsp;&nbsp; ج) <span class="math-ltr">A - B</span> &nbsp;&nbsp;&nbsp; د) <span class="math-ltr">B - A</span><br>
+                    <strong>پاسخ تشریحی:</strong> قسمتی از <span class="math-ltr">A</span> که با <span class="math-ltr">B</span> اشتراک ندارد، همان «آ منهای بی» است. گزینه صحیح: ج<br>
+                    <div class="venn-container">
+                        <svg class="venn-svg" viewBox="0 0 100 60">
+                            <circle cx="35" cy="30" r="25" class="venn-circle venn-fill-diff"></circle>
+                            <circle cx="65" cy="30" r="25" class="venn-circle" fill="none"></circle>
+                            <text x="25" y="35" class="venn-label">A</text>
+                            <text x="70" y="35" class="venn-label">B</text>
+                        </svg>
+                    </div>
+                    </p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۵:</strong> اگر <span class="math-ltr">A</span> مجموعه اعداد طبیعی زوج و <span class="math-ltr">B</span> مجموعه اعداد طبیعی مضرب ۴ باشد، حاصل <span class="math-ltr">A - B</span> کدام است؟<br>
+                    الف) اعداد طبیعی زوجی که مضرب ۴ نیستند.<br>
+                    ب) مجموعه تهی.<br>
+                    ج) اعداد طبیعی فرد.<br>
+                    د) خود مجموعه <span class="math-ltr">A</span>.<br>
+                    <strong>پاسخ تشریحی:</strong> <span class="math-ltr">B</span> زیرمجموعه <span class="math-ltr">A</span> است (هر مضرب چهاری، زوج است). پس <span class="math-ltr">A-B</span> یعنی اعداد زوجی که مضرب ۴ نباشند (مثل ۲، ۶، ۱۰ و ...). گزینه صحیح: الف
+                    </p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۶:</strong> حاصل عبارت <span class="math-ltr">(A - A) ∪ (B ∩ B)</span> کدام است؟<br>
+                    الف) <span class="math-ltr">A</span> &nbsp;&nbsp;&nbsp; ب) <span class="math-ltr">B</span> &nbsp;&nbsp;&nbsp; ج) <span class="math-ltr">∅</span> &nbsp;&nbsp;&nbsp; د) <span class="math-ltr">A ∪ B</span><br>
+                    <strong>پاسخ تشریحی:</strong> <span class="math-ltr">A - A = ∅</span> و <span class="math-ltr">B ∩ B = B</span>. اجتماع تهی با <span class="math-ltr">B</span> برابر <span class="math-ltr">B</span> است. گزینه صحیح: ب
+                    </p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۷:</strong> اگر <span class="math-ltr">n(A)=۱۰</span> و <span class="math-ltr">n(B)=۸</span> و <span class="math-ltr">n(A ∩ B)=۳</span> باشد، تعداد اعضای <span class="math-ltr">A ∪ B</span> چند تاست؟<br>
+                    الف) ۱۵ &nbsp;&nbsp;&nbsp; ب) ۱۸ &nbsp;&nbsp;&nbsp; ج) ۱۳ &nbsp;&nbsp;&nbsp; د) ۱۱<br>
+                    <strong>پاسخ تشریحی:</strong> از فرمول <span class="math-ltr">n(A ∪ B) = n(A) + n(B) - n(A ∩ B)</span> استفاده می‌کنیم. <span class="math-ltr">۱۰ + ۸ - ۳ = ۱۵</span>. گزینه صحیح: الف
+                    </p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۸:</strong> کدام عبارت همواره درست است؟<br>
+                    الف) <span class="math-ltr">A - B = B - A</span><br>
+                    ب) <span class="math-ltr">(A - B) ∩ B = ∅</span><br>
+                    ج) <span class="math-ltr">A ∪ B = A ∩ B</span><br>
+                    د) <span class="math-ltr">A - B = A</span><br>
+                    <strong>پاسخ تشریحی:</strong> <span class="math-ltr">A-B</span> یعنی عناصری که در <span class="math-ltr">A</span> هستند و در <span class="math-ltr">B</span> نیستند. پس قطعاً این عناصر در <span class="math-ltr">B</span> وجود ندارند، بنابراین اشتراکشان با <span class="math-ltr">B</span> تهی است. گزینه صحیح: ب
+                    </p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۹:</strong> اگر <span class="math-ltr">A = { ..., -۲, -۱, ۰, ۱}</span> و <span class="math-ltr">B = {۰, ۱, ۲, ...}</span> باشند، <span class="math-ltr">A ∩ B</span> چیست؟<br>
+                    الف) <span class="math-ltr">{۰}</span> &nbsp;&nbsp;&nbsp; ب) <span class="math-ltr">{۱}</span> &nbsp;&nbsp;&nbsp; ج) <span class="math-ltr">{۰, ۱}</span> &nbsp;&nbsp;&nbsp; د) <span class="math-ltr">ℤ</span><br>
+                    <strong>پاسخ تشریحی:</strong> <span class="math-ltr">A</span> اعداد صحیح کمتر یا مساوی ۱ است. <span class="math-ltr">B</span> اعداد صحیح حسابی (بزرگتر یا مساوی ۰) است. مشترک‌ها فقط ۰ و ۱ هستند. گزینه صحیح: ج
+                    </p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۱۰:</strong> مجموعه <span class="math-ltr">(A ∪ B) - (A - B)</span> برابر است با:<br>
+                    الف) <span class="math-ltr">A</span> &nbsp;&nbsp;&nbsp; ب) <span class="math-ltr">B</span> &nbsp;&nbsp;&nbsp; ج) <span class="math-ltr">A ∩ B</span> &nbsp;&nbsp;&nbsp; د) <span class="math-ltr">∅</span><br>
+                    <strong>پاسخ تشریحی:</strong> <span class="math-ltr">A ∪ B</span> یعنی همه چیز (چپ، وسط، راست). <span class="math-ltr">A - B</span> یعنی فقط سمت چپ. اگر از "همه چیز"، "فقط سمت چپ" را برداریم، "وسط و راست" باقی می‌ماند. "وسط و راست" یعنی <span class="math-ltr">(A ∩ B) ∪ (B-A)</span> که همان کل مجموعه <span class="math-ltr">B</span> است. گزینه صحیح: ب
+                    </p>
+                </div>
+
+                <h3>۶. تست‌های تمرینی (بدون پاسخ برای دانش‌آموز)</h3>
+                <ul>
+                    <li>۱. اگر <span class="math-ltr">A ⊆ B</span> و <span class="math-ltr">B ⊆ C</span> باشد، حاصل <span class="math-ltr">(A ∪ B) ∩ C</span> کدام است؟<br>الف) <span class="math-ltr">A</span> &nbsp;&nbsp;&nbsp; ب) <span class="math-ltr">B</span> &nbsp;&nbsp;&nbsp; ج) <span class="math-ltr">C</span> &nbsp;&nbsp;&nbsp; د) <span class="math-ltr">∅</span></li>
+                    <br>
+                    <li>۲. حاصل عبارت <span class="math-ltr">{۱, ۲} - {۲, ۳, ۴}</span> چند زیرمجموعه دارد؟<br>الف) ۱ &nbsp;&nbsp;&nbsp; ب) ۲ &nbsp;&nbsp;&nbsp; ج) ۴ &nbsp;&nbsp;&nbsp; د) ۸</li>
+                    <br>
+                    <li>۳. اگر <span class="math-ltr">A ∩ B = A</span> باشد، کدام رابطه حتماً درست است؟<br>الف) <span class="math-ltr">B ⊆ A</span> &nbsp;&nbsp;&nbsp; ب) <span class="math-ltr">A ⊆ B</span> &nbsp;&nbsp;&nbsp; ج) <span class="math-ltr">A = B</span> &nbsp;&nbsp;&nbsp; د) <span class="math-ltr">A ∩ B = ∅</span></li>
+                    <br>
+                    <li>۴. اشتراک مجموعه اعداد اول و مجموعه اعداد مرکب کدام است؟<br>الف) <span class="math-ltr">{۱}</span> &nbsp;&nbsp;&nbsp; ب) <span class="math-ltr">{۲}</span> &nbsp;&nbsp;&nbsp; ج) <span class="math-ltr">∅</span> &nbsp;&nbsp;&nbsp; د) نامتناهی</li>
+                    <br>
+                    <li>۵. اگر <span class="math-ltr">A = {x | x^۲ = ۱}</span> و <span class="math-ltr">B = {x | x^۳ = ۱}</span> باشد، <span class="math-ltr">A - B</span> کدام است؟<br>الف) <span class="math-ltr">{-۱}</span> &nbsp;&nbsp;&nbsp; ب) <span class="math-ltr">{۱}</span> &nbsp;&nbsp;&nbsp; ج) <span class="math-ltr">∅</span> &nbsp;&nbsp;&nbsp; د) <span class="math-ltr">{۰}</span></li>
+                    <br>
+                    <li>۶. کدام یک از گزینه‌های زیر با <span class="math-ltr">(A ∪ B)'</span> برابر است؟ (قانون دمورگان)<br>الف) <span class="math-ltr">A' ∪ B'</span> &nbsp;&nbsp;&nbsp; ب) <span class="math-ltr">A' ∩ B'</span> &nbsp;&nbsp;&nbsp; ج) <span class="math-ltr">A' - B'</span> &nbsp;&nbsp;&nbsp; د) <span class="math-ltr">A ∩ B</span></li>
+                    <br>
+                    <li>۷. اگر <span class="math-ltr">A - B = ∅</span>، آنگاه:<br>الف) <span class="math-ltr">A = ∅</span> &nbsp;&nbsp;&nbsp; ب) <span class="math-ltr">A ⊆ B</span> &nbsp;&nbsp;&nbsp; ج) <span class="math-ltr">B ⊆ A</span> &nbsp;&nbsp;&nbsp; د) <span class="math-ltr">A ∩ B = ∅</span></li>
+                    <br>
+                    <li>۸. در پرتاب یک تاس، اگر <span class="math-ltr">A</span> مجموعه اعداد زوج و <span class="math-ltr">B</span> مجموعه اعداد بزرگتر از ۲ باشد، <span class="math-ltr">A ∩ B</span> کدام است؟<br>الف) <span class="math-ltr">{۴, ۶}</span> &nbsp;&nbsp;&nbsp; ب) <span class="math-ltr">{۳, ۴, ۵, ۶}</span> &nbsp;&nbsp;&nbsp; ج) <span class="math-ltr">{۲, ۴, ۶}</span> &nbsp;&nbsp;&nbsp; د) <span class="math-ltr">{۶}</span></li>
+                    <br>
+                    <li>۹. اگر <span class="math-ltr">A = {۱, {۲, ۳}}</span> و <span class="math-ltr">B = {۲, ۳}</span> باشد، <span class="math-ltr">A ∩ B</span> چیست؟<br>الف) <span class="math-ltr">{۲, ۳}</span> &nbsp;&nbsp;&nbsp; ب) <span class="math-ltr">{{۲, ۳}}</span> &nbsp;&nbsp;&nbsp; ج) <span class="math-ltr">∅</span> &nbsp;&nbsp;&nbsp; د) <span class="math-ltr">{۱}</span></li>
+                    <br>
+                    <li>۱۰. تعداد اعضای مجموعه <span class="math-ltr">(A ∪ B) ∪ (A ∩ B)</span> برابر است با:<br>الف) <span class="math-ltr">n(A) + n(B)</span><br>ب) <span class="math-ltr">n(A ∪ B)</span><br>ج) <span class="math-ltr">n(A ∩ B)</span><br>د) <span class="math-ltr">n(A - B)</span></li>
+                </ul>
+
+            </div>
+        </main>
+
+        <!-- فوتر (ثابت در تمام صفحات پرینت) -->
+        <footer class="footer-strip w-full px-8 py-3 relative z-20 flex-shrink-0">
+            <div class="flex items-center justify-between text-slate-700 w-full h-14">
+                <div class="flex items-center gap-1 font-bold text-slate-700 text-sm shrink-0 w-1/4">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span class="whitespace-nowrap">مدرس: استاد فراهانی</span>
+                </div>
+                <div class="flex flex-col items-center justify-center flex-1 px-2">
+                    <div class="text-[10px] text-slate-500 font-bold mb-1 text-center leading-tight">
+                        آدرس کانال ما در ایتا، روبیکا، بله و سروش :
+                        <span class="inline-block text-sky-600 whitespace-nowrap">(با کلیک روی آدرس به کانال ما بپیوندید)</span>
+                    </div>
+                    <a href="https://eitaa.com/math_cafe" target="_blank" class="flex items-center gap-2 bg-sky-50 hover:bg-sky-100 px-4 py-1 rounded-full border border-sky-200 transition group w-fit cursor-pointer text-decoration-none shadow-sm">
+                        <span class="w-1.5 h-1.5 rounded-full bg-sky-500 group-hover:animate-ping"></span>
+                        <span class="font-black text-sm dir-ltr text-sky-700" style="direction: ltr;">@math_cafe</span>
+                    </a>
+                </div>
+                <!-- بخش شماره صفحه در پرینت توسط مرورگر و کد @page پر می‌شود -->
+                <div class="flex justify-end shrink-0 w-1/4">
+                    <div class="text-[10px] text-slate-400 font-bold whitespace-nowrap no-print">
+                        
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        const page = document.getElementById('page');
+        const mainContent = document.getElementById('main-content');
+
+        function toggleOrientation() {
+            if (page.classList.contains('portrait')) {
+                page.classList.remove('portrait');
+                page.classList.add('landscape');
+            } else {
+                page.classList.remove('landscape');
+                page.classList.add('portrait');
+            }
+        }
+
+        function togglePattern() {
+            if (mainContent.classList.contains('grid-pattern')) {
+                mainContent.classList.remove('grid-pattern');
+                mainContent.classList.add('line-pattern');
+            } else if (mainContent.classList.contains('line-pattern')) {
+                mainContent.classList.remove('line-pattern');
+                mainContent.classList.add('blank-pattern');
+            } else {
+                mainContent.classList.remove('blank-pattern');
+                mainContent.classList.add('grid-pattern');
+            }
+        }
+
+        function clearContent() {
+            if(confirm('آیا مطمئن هستید که می‌خواهید متن صفحه را پاک کنید؟')) {
+                document.getElementById('ai-output').innerHTML = '';
+            }
+        }
+    </script>
+</body>
+</html>
