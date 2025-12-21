@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جزوه ریاضی - فصل اول: مجموعه‌ها (نسخه جامع فارسی)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/shabnam-font@v5.0.1/dist/font-face.css" rel="stylesheet" type="text/css" />
+    <!-- فونت دست‌نویس انگلیسی برای Math Cafe -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- تنظیمات رنگی (آبی آسمانی) --- */
+        :root {
+            --primary-dark: #0284c7;   /* Sky 600 */
+            --primary-main: #0ea5e9;   /* Sky 500 */
+            --primary-light: #e0f2fe;  /* Sky 100 */
+            --accent: #f59e0b;         /* Amber 500 */
+            --text-main: #334155;      /* Slate 700 */
+            --bg-paper: #ffffff;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 20px 0;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* --- انیمیشن بخار فنجان --- */
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 0.8; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(-25px) scale(1.2); opacity: 0; }
+        }
+
+        .steam text {
+            animation: floatUp 3s infinite ease-out;
+            transform-origin: center;
+            opacity: 0;
+        }
+
+        .steam text:nth-child(1) { animation-delay: 0s; }
+        .steam text:nth-child(2) { animation-delay: 1.5s; }
+        .steam text:nth-child(3) { animation-delay: 0.5s; }
+        .steam text:nth-child(4) { animation-delay: 2s; }
+        .steam text:nth-child(5) { animation-delay: 1s; }
+        .steam text:nth-child(6) { animation-delay: 2.5s; }
+        .steam text:nth-child(7) { animation-delay: 0.8s; }
+        .steam text:nth-child(8) { animation-delay: 1.8s; }
+        .steam text:nth-child(9) { animation-delay: 1.2s; }
+
+        /* --- کانتینر صفحه A4 --- */
+        .page-container {
+            background: var(--bg-paper);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            position: relative;
+            overflow: visible; 
+            min-height: 297mm;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .portrait { width: 210mm; }
+        .landscape { width: 297mm; }
+
+        /* --- تنظیمات اختصاصی کادرها --- */
+        .input-wrapper { display: flex; gap: 0.5rem; align-items: center; }
+        #subject-input { width: 10rem; } 
+        #chapter-input { width: 4rem; }
+        #date-input { width: 8rem; }
+        .landscape #subject-input { width: 18rem !important; }
+        .landscape #chapter-input { width: 6rem !important; }
+        .landscape #date-input { width: 10rem !important; }
+        .landscape .input-wrapper { gap: 1.5rem; }
+
+        /* --- پترن‌ها --- */
+        .grid-pattern {
+            background-image: 
+                linear-gradient(#0ea5e915 1px, transparent 1px),
+                linear-gradient(90deg, #0ea5e915 1px, transparent 1px);
+            background-size: 25px 25px;
+            background-position: center 2px;
+        }
+        .line-pattern {
+            background-image: linear-gradient(#0ea5e915 1px, transparent 1px);
+            background-size: 100% 35px;
+            background-position: 0 35px;
+        }
+        .blank-pattern { background-image: none; }
+
+        /* --- هدر --- */
+        .header-graphic {
+            background: linear-gradient(135deg, var(--primary-main) 0%, var(--primary-dark) 100%);
+            position: relative;
+            color: white;
+            padding-bottom: 50px;
+            overflow: hidden;
+        }
+        .header-wave {
+            position: absolute; bottom: -1px; left: 0; width: 100%; height: auto;
+            color: var(--bg-paper); fill: currentColor; z-index: 2;
+        }
+
+        /* --- اینپوت‌های شیشه‌ای --- */
+        .glass-input-group { display: flex; flex-direction: column; align-items: center; z-index: 10; }
+        .glass-input {
+            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.4); color: white;
+            border-radius: 8px; transition: all 0.2s; text-align: center;
+            font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.3); outline: 2px solid var(--accent); border-color: transparent;
+        }
+        .input-label {
+            color: rgba(255, 255, 255, 0.95); font-size: 0.75rem; margin-bottom: 4px;
+            font-weight: bold; text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* --- واترمارک --- */
+        .watermark-container {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            width: 100%; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; pointer-events: none;
+            z-index: 0; opacity: 0.06;
+        }
+        .watermark-text {
+            font-size: 80px; font-weight: 900; color: var(--primary-dark);
+            white-space: nowrap; letter-spacing: -2px; line-height: 1.1; text-align: center;
+        }
+        .watermark-sub {
+            font-size: 90px; font-family: 'Dancing Script', cursive; font-weight: 700;
+            color: var(--primary-dark); letter-spacing: 0px; margin-top: 5px;
+        }
+
+        /* --- تایپوگرافی محتوا --- */
+        .ai-content {
+            font-family: 'Shabnam', 'Vazirmatn', sans-serif;
+            color: var(--text-main); line-height: 2.2; padding-bottom: 40px;
+        }
+        .ai-content h2 {
+            color: var(--primary-dark); font-size: 1.3rem; font-weight: 900;
+            margin-top: 2rem; margin-bottom: 1rem; border-bottom: 3px solid var(--primary-light);
+            display: inline-block; padding-bottom: 4px;
+        }
+        .ai-content p { margin-bottom: 0.8rem; text-align: justify; font-size: 0.95rem; }
+        .ai-content strong { color: #0369a1; font-weight: 900; }
+        .ai-content ul { list-style-type: none; padding-right: 0; }
+        .ai-content li { position: relative; padding-right: 1.5rem; margin-bottom: 0.5rem; }
+        .ai-content li::before {
+            content: "•"; color: var(--primary-main); font-size: 1.5rem;
+            position: absolute; right: 0; top: -5px;
+        }
+        /* کلاس کمکی برای جهت اعداد انگلیسی/ریاضی */
+        .math-ltr {
+            direction: ltr;
+            display: inline-block;
+            unicode-bidi: embed;
+        }
+        .ai-content .formula-box {
+            background: #f0f9ff; border: 2px dashed #7dd3fc; border-radius: 12px;
+            padding: 1rem; margin: 1rem 0; font-size: 1rem; line-height: 2;
+        }
+        .ai-content .example-box {
+            background-color: #f8fafc; border-right: 4px solid var(--accent);
+            padding: 10px 15px; margin: 15px 0; border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .ai-content .question-title {
+            color: #b45309; font-weight: bold; display: block; margin-bottom: 5px;
+        }
+
+        /* --- فوتر --- */
+        .footer-strip {
+            border-top: 3px solid var(--primary-dark);
+            background: #f8fafc;
+        }
+
+        /* --- تنظیمات حیاتی پرینت (هدر/فوتر ثابت و شماره صفحه) --- */
+        @page {
+            size: auto;
+            /* حاشیه بالا و پایین برای هدر و فوتر ثابت */
+            margin-top: 140px;
+            margin-bottom: 70px;
+            margin-left: 10mm;
+            margin-right: 10mm;
+
+            /* شماره گذاری صفحات استاندارد برای مرورگرهایی که پشتیبانی می‌کنند (مانند Firefox) */
+            @bottom-center {
+                content: "صفحه " counter(page);
+                font-family: 'Vazirmatn';
+                font-size: 9pt;
+            }
+        }
+
+        @page :has(.landscape) { size: landscape; }
+
+        @media print {
+            html, body {
+                width: 100%; height: 100%; margin: 0; padding: 0; background-color: white;
+            }
+            .no-print { display: none !important; }
+
+            .page-container {
+                margin: 0; padding: 0; box-shadow: none; border: none;
+                page-break-after: always; print-color-adjust: exact;
+                -webkit-print-color-adjust: exact; overflow: visible !important;
+                height: auto !important; min-height: auto; display: block;
+                width: 100% !important;
+            }
+
+            /* هدر ثابت با تکنیک مارجین منفی */
+            .header-graphic {
+                position: fixed; top: 0; left: 0; right: 0;
+                height: 120px; margin-top: -140px;
+                z-index: 1000; padding-bottom: 0;
+            }
+            .header-graphic .header-wave { bottom: -2px; }
+
+            /* فوتر ثابت */
+            .footer-strip {
+                position: fixed; bottom: 0; left: 0; right: 0;
+                height: 60px; margin-bottom: -70px;
+                z-index: 1000;
+            }
+
+            /* واترمارک ثابت */
+            .watermark-container {
+                position: fixed; top: 50%; left: 50%;
+                transform: translate(-50%, -50%) rotate(-45deg);
+                z-index: -1; opacity: 0.06; width: 100%;
+            }
+
+            h2 { page-break-before: auto; }
+            .example-box { page-break-inside: avoid; }
+            .ai-content { padding-top: 20px; }
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center">
+
+    <!-- نوار ابزار کنترل -->
+    <div class="no-print fixed top-4 right-4 bg-white/95 backdrop-blur shadow-2xl rounded-2xl z-50 p-3 border border-slate-200 flex flex-col gap-3 w-16 hover:w-auto hover:px-4 transition-all group overflow-hidden">
+        <button onclick="toggleOrientation()" title="تغییر جهت کاغذ" class="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-100 text-slate-600 transition w-full justify-center group-hover:justify-start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>
+            <span class="hidden group-hover:inline whitespace-nowrap text-sm">چرخش کاغذ</span>
+        </button>
+        <button onclick="togglePattern()" title="تغییر نوع خط‌کشی" class="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-100 text-slate-600 transition w-full justify-center group-hover:justify-start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+            <span class="hidden group-hover:inline whitespace-nowrap text-sm">تغییر خطوط</span>
+        </button>
+        <button onclick="clearContent()" title="پاک کردن محتوا" class="flex items-center gap-3 p-2 rounded-xl hover:bg-red-50 text-red-500 transition w-full justify-center group-hover:justify-start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+            <span class="hidden group-hover:inline whitespace-nowrap text-sm">پاک کردن</span>
+        </button>
+        <button onclick="window.print()" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white px-2 py-2 rounded-xl transition shadow-sm font-bold w-full justify-center group-hover:justify-start mt-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            <span class="hidden group-hover:inline whitespace-nowrap text-sm">چاپ PDF</span>
+        </button>
+    </div>
+
+    <!-- صفحه جزوه -->
+    <div id="page" class="page-container portrait">
+        
+        <!-- هدر گرافیکی (ثابت در تمام صفحات پرینت) -->
+        <header class="header-graphic pt-8 px-8 relative">
+            <div class="flex flex-row justify-between items-center relative z-10 w-full h-24">
+                <div class="flex items-center gap-4 shrink-0">
+                    <div class="w-16 h-16 flex items-center justify-center filter drop-shadow-md shrink-0">
+                         <svg viewBox="0 0 100 100" width="70" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M75 45 Q 95 45 95 60 Q 95 75 75 75" fill="none" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M20 40 Q 20 95 50 95 Q 80 95 80 40" fill="white" stroke="white" stroke-width="2"/>
+                            <line x1="15" y1="95" x2="85" y2="95" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                            <g class="steam">
+                                <text x="40" y="36" font-family="sans-serif" font-size="12" fill="white" font-weight="bold">+</text>
+                                <text x="60" y="36" font-family="serif" font-size="12" fill="white" font-weight="bold">√</text>
+                                <text x="50" y="28" font-family="serif" font-size="14" fill="white" font-weight="bold">π</text>
+                                <text x="30" y="28" font-family="sans-serif" font-size="10" fill="white" font-weight="bold">۲</text>
+                                <text x="70" y="28" font-family="sans-serif" font-size="10" fill="white" font-weight="bold">۵</text>
+                                <text x="35" y="20" font-family="serif" font-size="10" fill="white" font-weight="bold">∫</text>
+                                <text x="50" y="20" font-family="serif" font-size="12" fill="white" font-weight="bold">φ</text>
+                                <text x="65" y="20" font-family="serif" font-size="10" fill="white" font-weight="bold">÷</text>
+                                <text x="50" y="12" font-family="sans-serif" font-size="11" fill="white" font-weight="bold">۱۹</text>
+                            </g>
+                            <text x="50" y="70" font-family="'Dancing Script', cursive" font-size="12" fill="#0ea5e9" text-anchor="middle" font-weight="bold">Math Cafe</text>
+                        </svg>
+                    </div>
+                    <div class="shrink-0">
+                        <h1 class="text-4xl font-black tracking-tight text-white drop-shadow-md whitespace-nowrap" style="text-shadow: 0 2px 4px rgba(0,0,0,0.15);">جزوه ریاضی</h1>
+                        <span class="text-sky-100 text-sm font-bold opacity-90 block mt-2 whitespace-nowrap">Mathematics Note</span>
+                    </div>
+                </div>
+                <div class="input-wrapper shrink-0">
+                    <div class="glass-input-group">
+                        <span class="input-label">موضوع</span>
+                        <div id="subject-input" class="glass-input h-10 flex items-center justify-center cursor-text" contenteditable="true">مجموعه‌ها</div>
+                    </div>
+                    <div class="glass-input-group">
+                        <span class="input-label">فصل</span>
+                        <div id="chapter-input" class="glass-input h-10 flex items-center justify-center" contenteditable="true">اول</div>
+                    </div>
+                    <div class="glass-input-group">
+                        <span class="input-label">تاریخ</span>
+                        <div id="date-input" class="glass-input h-10 flex items-center justify-center" contenteditable="true">/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/</div>
+                    </div>
+                </div>
+            </div>
+            <svg class="header-wave" viewBox="0 0 1440 120" preserveAspectRatio="none">
+                <path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,85.3C672,75,768,85,864,90.7C960,96,1056,96,1152,85.3C1248,75,1344,53,1392,42.7L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </header>
+
+        <!-- بدنه اصلی -->
+        <main id="main-content" class="flex-grow w-full relative z-10 blank-pattern px-8 py-4">
+            <!-- واترمارک ثابت در تمام صفحات -->
+            <div class="watermark-container">
+                <div class="watermark-text">استاد فراهانی</div>
+                <div class="watermark-sub">Math Cafe</div>
+            </div>
+
+            <div id="ai-output" class="ai-content relative z-10 h-full">
+                
+                <h2>۱. درس‌نامه و مفاهیم پایه</h2>
+                <div class="example-box">
+                    <p><strong>تعریف مجموعه:</strong> در زبان ریاضی، به دسته‌ای از اشیاء که <strong>کاملاً مشخص</strong> و <strong>غیرتکراری</strong> باشند، «مجموعه» می‌گوییم. هر یک از این اشیاء (عدد، حروف، شکل و...) یک عضو مجموعه نامیده می‌شوند.</p>
+                </div>
+                
+                <p><strong>دو شرط اساسی برای تشکیل مجموعه:</strong></p>
+                <ul>
+                    <li><strong>۱. کاملاً مشخص بودن:</strong> یعنی دقیقاً معلوم باشد چه چیزی عضو مجموعه است و چه چیزی نیست. عبارت‌هایی که سلیقه‌ای هستند یا معیار دقیقی ندارند (مثل: زیباترین، باهوش‌ترین، تعدادی از، چند تا از، بزرگترین و...) مجموعه تشکیل نمی‌دهند.</li>
+                    <li><strong>۲. غیرتکراری بودن:</strong> در مجموعه عضو تکراری نداریم. اگر عضوی چند بار نوشته شود، فقط یک‌بار شمرده می‌شود و نوشتن تکراری آن تأثیری در مجموعه ندارد.</li>
+                </ul>
+
+                <div class="formula-box">
+                    <strong>نکات مهم و قراردادی:</strong><br>
+                    • مجموعه‌ها را با حروف بزرگ انگلیسی (مانند <span class="math-ltr">A, B, C</span>) نام‌گذاری می‌کنیم.<br>
+                    • اعضا را داخل دو آکولاد <span class="math-ltr">{ }</span> قرار می‌دهیم و با ویرگول از هم جدا می‌کنیم.<br>
+                    • <strong>ترتیب مهم نیست:</strong> جابه‌جا نوشتن اعضا، مجموعه را تغییر نمی‌دهد (مجموعه <span class="math-ltr">{۱, ۲}</span> با <span class="math-ltr">{۲, ۱}</span> برابر است).<br>
+                    • <strong>عضویت:</strong> اگر عدد <span class="math-ltr">x</span> در مجموعه <span class="math-ltr">A</span> باشد، می‌نویسیم: <span class="math-ltr">x ∈ A</span> (می‌خوانیم: ایکس عضو آ است).<br>
+                    • <strong>عدم عضویت:</strong> اگر عدد <span class="math-ltr">y</span> در مجموعه <span class="math-ltr">A</span> نباشد، می‌نویسیم: <span class="math-ltr">y ∉ A</span> (می‌خوانیم: ایگرگ عضو آ نیست).<br>
+                    • <strong>مجموعه تُهی:</strong> مجموعه‌ای که هیچ عضوی نداشته باشد، «مجموعه تهی» نامیده می‌شود و با نماد <span class="math-ltr">∅</span> یا <span class="math-ltr">{ }</span> نشان داده می‌شود.
+                </div>
+
+                <h2>۲. مثال‌های آموزشی (۵ مثال)</h2>
+                <div class="example-box">
+                    <p><strong>مثال ۱ (تشخیص مجموعه - صفت‌های کیفی):</strong><br>
+                    آیا عبارت «چهار میوه خوشمزه» یک مجموعه را مشخص می‌کند؟<br>
+                    <strong>تحلیل:</strong> خیر. واژه «خوشمزه» سلیقه‌ای است. ممکن است یک میوه برای فردی خوشمزه و برای دیگری بدمزه باشد. پس چون اعضا کاملاً مشخص نیستند، مجموعه نیست.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۲ (تشخیص مجموعه - اعداد):</strong><br>
+                    آیا عبارت «اعداد طبیعی کمتر از ۵» یک مجموعه است؟<br>
+                    <strong>تحلیل:</strong> بله. این اعداد دقیقاً مشخص هستند: ۱، ۲، ۳ و ۴. هیچ شکی در مورد آن‌ها وجود ندارد.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۳ (حذف تکراری‌ها):</strong><br>
+                    مجموعه حروف کلمه «گرگان» را بنویسید.<br>
+                    <strong>تحلیل:</strong> حروف تشکیل‌دهنده عبارتند از: «گ»، «ر»، «گ»، «ا»، «ن».<br>
+                    چون حرف «گ» دو بار تکرار شده، یک‌بار آن را می‌نویسیم.<br>
+                    <strong>پاسخ:</strong> <span class="math-ltr">{ گ, ر, ا, ن }</span></p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۴ (مجموعه تهی):</strong><br>
+                    مجموعه اعداد طبیعی بین ۵ و ۶ را بنویسید.<br>
+                    <strong>تحلیل:</strong> بین دو عدد ۵ و ۶ هیچ عدد طبیعی وجود ندارد. پس این مجموعه هیچ عضوی ندارد.<br>
+                    <strong>پاسخ:</strong> <span class="math-ltr">∅ یا { }</span></p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۵ (مجموعه تک‌عضوی):</strong><br>
+                    مجموعه اعداد اول زوج را مشخص کنید.<br>
+                    <strong>تحلیل:</strong> تنها عددی که هم زوج باشد و هم اول، عدد ۲ است.<br>
+                    <strong>پاسخ:</strong> <span class="math-ltr">{۲}</span> (دقت کنید که این مجموعه تهی نیست، بلکه یک عضو دارد).</p>
+                </div>
+
+                <h2>۳. نمونه سؤالات تشریحی (حل شده گام‌به‌گام)</h2>
+                <p class="question-title">سؤال ۱:</p>
+                <p>مجموعه <span class="math-ltr">A</span> شامل شمارنده‌های طبیعی عدد ۱۲ است. این مجموعه را با اعضا بنویسید و تعداد اعضای آن را مشخص کنید.<br>
+                <strong>پاسخ گام‌به‌گام:</strong><br>
+                ۱. شمارنده‌های ۱۲ اعدادی هستند که ۱۲ بر آن‌ها بخش‌پذیر است.<br>
+                ۲. این اعداد عبارتند از: ۱، ۲، ۳، ۴، ۶، ۱۲.<br>
+                ۳. نوشتن مجموعه: <span class="math-ltr">A = {۱, ۲, ۳, ۴, ۶, ۱۲}</span><br>
+                ۴. تعداد اعضا: با شمارش اعضا متوجه می‌شویم این مجموعه ۶ عضو دارد (<span class="math-ltr">n(A)=۶</span>).</p>
+
+                <p class="question-title">سؤال ۲ (همان مثال ۳ مورد نظر):</p>
+                <p>مجموعه اعداد صحیح بین ۳- و ۱+ را بنویسید.<br>
+                <strong>پاسخ گام‌به‌گام:</strong><br>
+                ۱. کلمه «بین» یعنی خودِ عددهای ۳- و ۱ عضو مجموعه نیستند.<br>
+                ۲. اعداد صحیح شامل اعداد مثبت، منفی و صفر (بدون اعشار) هستند.<br>
+                ۳. اعداد مورد نظر: ۲-، ۱-، ۰.<br>
+                ۴. پاسخ نهایی: <span class="math-ltr">{-۲, -۱, ۰}</span>.</p>
+
+                <p class="question-title">سؤال ۳:</p>
+                <p>با توجه به مجموعه <span class="math-ltr">B = {۵, {۵}, ۷, ۸}</span>، درستی یا نادرستی عبارت‌های زیر را مشخص کنید.<br>
+                الف) <span class="math-ltr">۵ ∈ B</span><br>
+                ب) <span class="math-ltr">{۵} ∈ B</span><br>
+                ج) <span class="math-ltr">۷ ∉ B</span><br>
+                <strong>پاسخ گام‌به‌گام:</strong><br>
+                بررسی الف: عدد ۵ به عنوان یک عضو مستقل در ابتدای مجموعه آمده است. <span class="text-green-600">(درست ✅)</span><br>
+                بررسی ب: عبارت {۵} (یعنی یک مجموعه شامل عدد ۵) دقیقاً به همین شکل داخل آکولاد اصلی وجود دارد. <span class="text-green-600">(درست ✅)</span><br>
+                بررسی ج: عدد ۷ داخل مجموعه هست، پس باید می‌نوشتیم عضو هست (<span class="math-ltr">۷ ∈ B</span>). عبارت گفته عضو نیست. <span class="text-red-500">(نادرست ❌)</span></p>
+
+                <p class="question-title">سؤال ۴:</p>
+                <p>اگر <span class="math-ltr">C = {x, y, x, z, m, m}</span> باشد، تعداد اعضای <span class="math-ltr">C</span> چقدر است؟<br>
+                <strong>پاسخ گام‌به‌گام:</strong><br>
+                ۱. ابتدا اعضای تکراری را شناسایی و حذف می‌کنیم.<br>
+                ۲. <span class="math-ltr">x</span> تکراری است ← یک بار نوشته شود.<br>
+                ۳. <span class="math-ltr">m</span> تکراری است ← یک بار نوشته شود.<br>
+                ۴. شکل ساده شده مجموعه: <span class="math-ltr">C = {x, y, z, m}</span>.<br>
+                ۵. تعداد اعضا برابر با ۴ است.</p>
+
+                <p class="question-title">سؤال ۵:</p>
+                <p>دو مجموعه <span class="math-ltr">A = {۳, x}</span> و <span class="math-ltr">B = {۴, y-۱}</span> با هم برابرند. مقادیر <span class="math-ltr">x</span> و <span class="math-ltr">y</span> را بیابید.<br>
+                <strong>پاسخ گام‌به‌گام:</strong><br>
+                ۱. در مجموعه‌های برابر، اعضا باید عیناً یکی باشند.<br>
+                ۲. عدد ۳ در مجموعه <span class="math-ltr">A</span> است، پس باید در <span class="math-ltr">B</span> هم باشد. در <span class="math-ltr">B</span> یک عدد ۴ داریم، پس عضو مجهول (<span class="math-ltr">y-۱</span>) باید برابر ۳ باشد.<br>
+                <span class="math-ltr">y - ۱ = ۳ ⇒ y = ۴</span><br>
+                ۳. عدد ۴ در مجموعه <span class="math-ltr">B</span> است، پس باید در <span class="math-ltr">A</span> هم باشد. پس <span class="math-ltr">x</span> باید برابر ۴ باشد.<br>
+                <span class="math-ltr">x = ۴</span></p>
+
+                <h2>۴. تمرین (مخصوص دانش‌آموز - بدون پاسخ)</h2>
+                <ul>
+                    <li>۱) کدام‌یک از عبارت‌های زیر مشخص‌کننده یک مجموعه است؟<br>الف) سه عدد فرد متوالی<br>ب) اعداد اول کوچکتر از ۲۰<br>ج) شاعران معروف قرن هفتم</li>
+                    <li>۲) اعضای مجموعه حروف کلمه «MATHEMATICS» را بنویسید (با حذف تکراری‌ها).</li>
+                    <li>۳) مجموعه اعداد صحیح که مربع (توان دوم) آن‌ها برابر ۲۵ شود را تشکیل دهید.</li>
+                    <li>۴) آیا مجموعه <span class="math-ltr">K = { ∅ }</span> یک مجموعه تهی است؟ دلیل خود را بنویسید.</li>
+                    <li>۵) مجموعه اعداد طبیعی که هم‌زمان هم زوج باشند و هم فرد را بنویسید و نوع مجموعه را مشخص کنید.</li>
+                </ul>
+
+                <h2>۵. تست‌های چهارگزینه‌ای (با پاسخ تشریحی)</h2>
+                <div class="example-box">
+                    <p><strong>تست ۱:</strong> کدام گزینه نشان‌دهنده‌ی یک مجموعه نیست؟<br>
+                    ۱) اعداد طبیعی بین ۸ و ۹<br>
+                    ۲) اعداد اول یک‌رقمی<br>
+                    ۳) چهار عدد بزرگ<br>
+                    ۴) شمارنده‌های عدد ۶<br>
+                    <strong>پاسخ تشریحی:</strong> گزینه ۳. گزینه‌های ۱، ۲ و ۴ کاملاً مشخص هستند (گزینه ۱ مجموعه تهی است که خود یک مجموعه محسوب می‌شود). اما در گزینه ۳، واژه «بزرگ» معیار مشخصی ندارد و سلیقه‌ای است.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۲:</strong> اگر مجموعه <span class="math-ltr">A = {۱, {۱}, {۱, ۲}}</span> باشد، این مجموعه چند عضو دارد؟<br>
+                    ۱) ۴ عضو<br>
+                    ۲) ۲ عضو<br>
+                    ۳) ۳ عضو<br>
+                    ۴) ۵ عضو<br>
+                    <strong>پاسخ تشریحی:</strong> گزینه ۳. اعضای این مجموعه با ویرگول از هم جدا شده‌اند: ۱. عدد ۱، ۲. مجموعه <span class="math-ltr">{۱}</span> (یک عضو مجموعه‌ای)، ۳. مجموعه <span class="math-ltr">{۱, ۲}</span> (یک عضو مجموعه‌ای دیگر). پس این مجموعه ۳ عضو متمایز دارد.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۳:</strong> کدام گزینه نشان‌دهنده‌ی مجموعه تهی است؟<br>
+                    ۱) مجموعه <span class="math-ltr">{۰}</span><br>
+                    ۲) مجموعه عددهای طبیعی بین ۵ و ۶<br>
+                    ۳) مجموعه <span class="math-ltr">{∅}</span><br>
+                    ۴) کوچک‌ترین عدد صحیح<br>
+                    <strong>پاسخ تشریحی:</strong> گزینه ۲. بین ۵ و ۶ هیچ عدد طبیعی وجود ندارد، پس این مجموعه عضوی ندارد. گزینه ۱ و ۳ هر کدام یک عضو دارند. گزینه ۴ هم نامشخص است (چون اعداد صحیح از طرف منفی بی‌نهایت هستند) اما تهی نیست.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۴:</strong> تعداد زیرمجموعه‌های مجموعه‌ی تهی چند تاست؟<br>
+                    ۱) صفر<br>
+                    ۲) یک<br>
+                    ۳) دو<br>
+                    ۴) بی‌نهایت<br>
+                    <strong>پاسخ تشریحی:</strong> گزینه ۲. هر مجموعه حداقل یک زیرمجموعه دارد که خودِ مجموعه تهی است. فرمول تعداد زیرمجموعه <span class="math-ltr">2^n</span> است. چون تهی ۰ عضو دارد: <span class="math-ltr">2^0 = ۱</span>.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۵:</strong> در مجموعه <span class="math-ltr">M = {۲, ۳, {۲, ۳}}</span> کدام رابطه نادرست است؟<br>
+                    ۱) <span class="math-ltr">۲ ∈ M</span><br>
+                    ۲) <span class="math-ltr">۳ ∈ M</span><br>
+                    ۳) <span class="math-ltr">{۲, ۳} ∈ M</span><br>
+                    ۴) <span class="math-ltr">{۲} ∈ M</span><br>
+                    <strong>پاسخ تشریحی:</strong> گزینه ۴. عدد ۲ در مجموعه هست (گزینه ۱). عدد ۳ هم هست (گزینه ۲). بسته <span class="math-ltr">{۲, ۳}</span> هم هست (گزینه ۳). اما بسته <span class="math-ltr">{۲}</span> به تنهایی در مجموعه وجود ندارد (خودِ عدد ۲ هست، اما داخل آکولاد نیست).</p>
+                </div>
+
+                <h2>۶. تست‌های تمرینی (بدون پاسخ - جهت خودآزمایی)</h2>
+                <ul>
+                    <li>تست ۶: تعداد اعضای مجموعه <span class="math-ltr">A = { ∅, {∅}, {∅, ∅} }</span> کدام است؟<br>۱) ۱ &nbsp;&nbsp;&nbsp; ۲) ۲ &nbsp;&nbsp;&nbsp; ۳) ۳ &nbsp;&nbsp;&nbsp; ۴) ۴</li>
+                    <br>
+                    <li>تست ۷: کدام عبارت درست است؟<br>۱) <span class="math-ltr">{۱, ۲} ≠ {۲, ۱}</span><br>۲) مجموعه «اعداد خیلی کوچک» یک مجموعه تهی است.<br>۳) ترتیب قرار گرفتن اعضا در مجموعه مهم نیست.<br>۴) مجموعه <span class="math-ltr">{۰}</span> همان مجموعه تهی است.</li>
+                    <br>
+                    <li>تست ۸: مجموعه <span class="math-ltr">P = {x ∈ ℕ | x < ۱}</span> چند عضو دارد؟<br>۱) صفر &nbsp;&nbsp;&nbsp; ۲) یک &nbsp;&nbsp;&nbsp; ۳) بی‌نهایت &nbsp;&nbsp;&nbsp; ۴) ده</li>
+                    <br>
+                    <li>تست ۹: اگر <span class="math-ltr">A = {۱, ۲, ۳, ..., ۱۰}</span> باشد، تعداد اعضای آن چقدر است؟<br>۱) ۹ &nbsp;&nbsp;&nbsp; ۲) ۱۰ &nbsp;&nbsp;&nbsp; ۳) بی‌نهایت &nbsp;&nbsp;&nbsp; ۴) ۱۱</li>
+                    <br>
+                    <li>تست ۱۰: کدام‌یک از مجموعه‌های زیر با مجموعه <span class="math-ltr">{a, b, c}</span> برابر است؟<br>۱) <span class="math-ltr">{a, b, c, d}</span><br>۲) <span class="math-ltr">{a, a, b, c}</span><br>۳) <span class="math-ltr">{a, b}</span><br>۴) <span class="math-ltr">{a, c}</span></li>
+                </ul>
+
+            </div>
+        </main>
+
+        <!-- فوتر (ثابت در تمام صفحات پرینت) -->
+        <footer class="footer-strip w-full px-8 py-3 relative z-20 flex-shrink-0">
+            <div class="flex items-center justify-between text-slate-700 w-full h-14">
+                <div class="flex items-center gap-1 font-bold text-slate-700 text-sm shrink-0 w-1/4">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span class="whitespace-nowrap">مدرس: استاد فراهانی</span>
+                </div>
+                <div class="flex flex-col items-center justify-center flex-1 px-2">
+                    <div class="text-[10px] text-slate-500 font-bold mb-1 text-center leading-tight">
+                        آدرس کانال ما در ایتا، روبیکا، بله و سروش :
+                        <span class="inline-block text-sky-600 whitespace-nowrap">(با کلیک روی آدرس به کانال ما بپیوندید)</span>
+                    </div>
+                    <a href="https://eitaa.com/math_cafe" target="_blank" class="flex items-center gap-2 bg-sky-50 hover:bg-sky-100 px-4 py-1 rounded-full border border-sky-200 transition group w-fit cursor-pointer text-decoration-none shadow-sm">
+                        <span class="w-1.5 h-1.5 rounded-full bg-sky-500 group-hover:animate-ping"></span>
+                        <span class="font-black text-sm dir-ltr text-sky-700" style="direction: ltr;">@math_cafe</span>
+                    </a>
+                </div>
+                <!-- بخش شماره صفحه در پرینت توسط مرورگر و کد @page پر می‌شود -->
+                <div class="flex justify-end shrink-0 w-1/4">
+                    <div class="text-[10px] text-slate-400 font-bold whitespace-nowrap no-print">
+                        
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        const page = document.getElementById('page');
+        const mainContent = document.getElementById('main-content');
+
+        function toggleOrientation() {
+            if (page.classList.contains('portrait')) {
+                page.classList.remove('portrait');
+                page.classList.add('landscape');
+            } else {
+                page.classList.remove('landscape');
+                page.classList.add('portrait');
+            }
+        }
+
+        function togglePattern() {
+            if (mainContent.classList.contains('grid-pattern')) {
+                mainContent.classList.remove('grid-pattern');
+                mainContent.classList.add('line-pattern');
+            } else if (mainContent.classList.contains('line-pattern')) {
+                mainContent.classList.remove('line-pattern');
+                mainContent.classList.add('blank-pattern');
+            } else {
+                mainContent.classList.remove('blank-pattern');
+                mainContent.classList.add('grid-pattern');
+            }
+        }
+
+        function clearContent() {
+            if(confirm('آیا مطمئن هستید که می‌خواهید متن صفحه را پاک کنید؟')) {
+                document.getElementById('ai-output').innerHTML = '';
+            }
+        }
+    </script>
+</body>
+</html>
