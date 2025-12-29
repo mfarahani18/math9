@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جزوه ریاضی نهم - فصل دوم: قدر مطلق و محاسبه تقریبی</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/shabnam-font@v5.0.1/dist/font-face.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- تنظیمات رنگی فصل دوم (سبز زمردی) --- */
+        :root {
+            --primary-dark: #047857;   /* Emerald 700 */
+            --primary-main: #10b981;   /* Emerald 500 */
+            --primary-light: #d1fae5;  /* Emerald 100 */
+            --accent: #d97706;         /* Amber 600 */
+            --text-main: #0f172a;      /* Slate 900 */
+            --bg-paper: #ffffff;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f0fdf4; /* Light Emerald Bg */
+            margin: 0;
+            padding: 20px 0;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* --- استایل کسرها (عمودی) --- */
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 4px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .fraction .numerator {
+            border-bottom: 2px solid currentColor;
+            padding: 0 2px 1px 2px;
+            line-height: 1.1;
+            text-align: center;
+            width: 100%;
+        }
+        .fraction .denominator {
+            padding: 1px 2px 0 2px;
+            line-height: 1.1;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* --- استایل رادیکال کامل --- */
+        .radical {
+            display: inline-block;
+            white-space: nowrap;
+            line-height: 1.2;
+        }
+        .rad-symbol {
+            display: inline-block;
+            font-size: 1.1em;
+            vertical-align: bottom; /* Adjust alignment */
+            margin-left: 1px; /* Slight gap in LTR */
+        }
+        .rad-bar {
+            display: inline-block;
+            border-top: 2px solid currentColor;
+            padding-top: 1px;
+            margin-left: -2px; /* Pull closer to symbol */
+            vertical-align: bottom;
+        }
+
+        /* --- انیمیشن بخار فنجان --- */
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 0.8; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(-25px) scale(1.2); opacity: 0; }
+        }
+
+        .steam text {
+            animation: floatUp 3s infinite ease-out;
+            transform-origin: center;
+            opacity: 0;
+        }
+
+        .steam text:nth-child(1) { animation-delay: 0s; }
+        .steam text:nth-child(2) { animation-delay: 1.5s; }
+        .steam text:nth-child(3) { animation-delay: 0.5s; }
+
+        /* --- کانتینر صفحه A4 --- */
+        .page-container {
+            background: var(--bg-paper);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            position: relative;
+            overflow: visible; 
+            min-height: 297mm;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .portrait { width: 210mm; }
+        .landscape { width: 297mm; }
+
+        /* --- تنظیمات اختصاصی کادرها --- */
+        .input-wrapper { display: flex; gap: 0.5rem; align-items: center; }
+        #subject-input { width: 14rem; } 
+        #chapter-input { width: 4rem; }
+        #date-input { width: 8rem; }
+        .landscape #subject-input { width: 20rem !important; }
+        
+        /* --- پترن‌ها --- */
+        .grid-pattern {
+            background-image: 
+                linear-gradient(#10b98115 1px, transparent 1px),
+                linear-gradient(90deg, #10b98115 1px, transparent 1px);
+            background-size: 25px 25px;
+            background-position: center 2px;
+        }
+        .line-pattern {
+            background-image: linear-gradient(#10b98115 1px, transparent 1px);
+            background-size: 100% 35px;
+            background-position: 0 35px;
+        }
+        .blank-pattern { background-image: none; }
+
+        /* --- هدر --- */
+        .header-graphic {
+            background: linear-gradient(135deg, var(--primary-main) 0%, var(--primary-dark) 100%);
+            position: relative;
+            color: white;
+            padding-bottom: 50px;
+            overflow: hidden;
+        }
+        .header-wave {
+            position: absolute; bottom: -1px; left: 0; width: 100%; height: auto;
+            color: var(--bg-paper); fill: currentColor; z-index: 2;
+        }
+
+        /* --- اینپوت‌های شیشه‌ای --- */
+        .glass-input-group { display: flex; flex-direction: column; align-items: center; z-index: 10; }
+        .glass-input {
+            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.4); color: white;
+            border-radius: 8px; transition: all 0.2s; text-align: center;
+            font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .input-label {
+            color: rgba(255, 255, 255, 0.95); font-size: 0.75rem; margin-bottom: 4px;
+            font-weight: bold; text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* --- واترمارک --- */
+        .watermark-container {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            width: 100%; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; pointer-events: none;
+            z-index: 0; opacity: 0.04;
+        }
+        .watermark-text {
+            font-size: 80px; font-weight: 900; color: var(--primary-dark);
+            white-space: nowrap; letter-spacing: -2px; line-height: 1.1; text-align: center;
+        }
+        .watermark-sub {
+            font-size: 90px; font-family: 'Dancing Script', cursive; font-weight: 700;
+            color: var(--primary-dark); letter-spacing: 0px; margin-top: 5px;
+        }
+
+        /* --- تایپوگرافی محتوا --- */
+        .ai-content {
+            font-family: 'Shabnam', 'Vazirmatn', sans-serif;
+            color: var(--text-main); line-height: 2.2; padding-bottom: 40px;
+        }
+        .ai-content h2 {
+            color: var(--primary-dark); font-size: 1.4rem; font-weight: 900;
+            margin-top: 2rem; margin-bottom: 1rem; border-bottom: 3px solid var(--primary-light);
+            display: inline-block; padding-bottom: 4px;
+        }
+        .ai-content h3 {
+             color: var(--primary-main); font-size: 1.1rem; font-weight: 800;
+             margin-top: 1.5rem; margin-bottom: 0.5rem;
+        }
+        .ai-content p { margin-bottom: 0.8rem; text-align: justify; font-size: 0.95rem; }
+        .ai-content strong { color: #065f46; font-weight: 900; }
+        
+        .ai-content ul { list-style-type: none; padding-right: 0; }
+        .ai-content li { position: relative; padding-right: 1.5rem; margin-bottom: 0.5rem; }
+        .ai-content li::before {
+            content: "•"; color: var(--accent); font-size: 1.5rem;
+            position: absolute; right: 0; top: -5px;
+        }
+
+        /* کلاس کمکی برای ریاضی با اعداد فارسی */
+        /* حذف تایمز نیو رومن برای پشتیبانی بهتر از اعداد فارسی */
+        .math-ltr {
+            direction: ltr;
+            display: inline-block;
+            unicode-bidi: embed;
+            font-family: 'Vazirmatn', sans-serif; /* استفاده از فونت وزیر برای اعداد فارسی */
+            font-weight: bold;
+        }
+
+        /* باکس‌ها */
+        .formula-box {
+            background: #ecfdf5; border: 2px dashed #6ee7b7; border-radius: 12px;
+            padding: 1rem; margin: 1rem 0; font-size: 1rem; line-height: 2;
+            text-align: right;
+        }
+        .example-box {
+            background-color: #f8fafc; border-right: 4px solid var(--accent);
+            padding: 12px 18px; margin: 15px 0; border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        }
+        .question-title {
+            color: #d97706; font-weight: bold; display: block; margin-bottom: 5px;
+            margin-top: 15px; border-bottom: 1px dotted #ccc; padding-bottom: 2px; width: fit-content;
+        }
+
+        /* استایل اختصاصی برای تست‌های پایانی (بدون کادر) */
+        .simple-test-item {
+            padding: 10px 0;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .simple-test-item:last-child { border-bottom: none; }
+        .test-number {
+            color: var(--primary-dark);
+            font-weight: 900;
+            margin-left: 5px;
+        }
+
+        /* چیدمان تست‌ها (خطی) */
+        .test-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 8px;
+            margin-bottom: 5px;
+            padding-right: 15px;
+        }
+        .test-option {
+            font-size: 0.95rem;
+            white-space: nowrap;
+            color: #334155;
+        }
+
+        /* جداول */
+        table {
+            width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.95rem;
+        }
+        th, td {
+            border: 1px solid #e5e7eb; padding: 10px; text-align: center;
+        }
+        th { background-color: var(--primary-light); color: var(--primary-dark); font-weight: bold; }
+        tr:nth-child(even) { background-color: #f9fafb; }
+
+        /* --- فوتر --- */
+        .footer-strip {
+            border-top: 3px solid var(--primary-dark);
+            background: #f8fafc;
+        }
+
+        /* --- تنظیمات حیاتی پرینت --- */
+        @page {
+            size: auto;
+            margin-top: 140px; margin-bottom: 70px; margin-left: 10mm; margin-right: 10mm;
+            @bottom-center { content: "صفحه " counter(page); font-family: 'Vazirmatn'; font-size: 9pt; }
+        }
+
+        @media print {
+            html, body { width: 100%; height: 100%; margin: 0; padding: 0; background-color: white; }
+            .no-print { display: none !important; }
+            .page-container {
+                margin: 0; padding: 0; box-shadow: none; border: none;
+                page-break-after: always; print-color-adjust: exact;
+                height: auto !important; min-height: auto; display: block; width: 100% !important;
+            }
+            .header-graphic { position: fixed; top: 0; left: 0; right: 0; height: 120px; margin-top: -140px; z-index: 1000; padding-bottom: 0; }
+            .footer-strip { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; margin-bottom: -70px; z-index: 1000; }
+            .watermark-container { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); z-index: -1; opacity: 0.04; width: 100%; }
+            h2 { page-break-before: auto; }
+            .example-box { page-break-inside: avoid; }
+            .simple-test-item { page-break-inside: avoid; }
+            .ai-content { padding-top: 20px; }
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center">
+
+    <!-- نوار ابزار کنترل -->
+    <div class="no-print fixed top-4 right-4 bg-white/95 backdrop-blur shadow-2xl rounded-2xl z-50 p-3 border border-slate-200 flex flex-col gap-3 w-16 hover:w-auto hover:px-4 transition-all group overflow-hidden">
+        <button onclick="toggleOrientation()" title="تغییر جهت کاغذ" class="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-100 text-slate-600 transition w-full justify-center group-hover:justify-start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>
+            <span class="hidden group-hover:inline whitespace-nowrap text-sm">چرخش کاغذ</span>
+        </button>
+        <button onclick="togglePattern()" title="تغییر نوع خط‌کشی" class="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-100 text-slate-600 transition w-full justify-center group-hover:justify-start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+            <span class="hidden group-hover:inline whitespace-nowrap text-sm">تغییر خطوط</span>
+        </button>
+        <button onclick="clearContent()" title="پاک کردن محتوا" class="flex items-center gap-3 p-2 rounded-xl hover:bg-red-50 text-red-500 transition w-full justify-center group-hover:justify-start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+            <span class="hidden group-hover:inline whitespace-nowrap text-sm">پاک کردن</span>
+        </button>
+        <button onclick="window.print()" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white px-2 py-2 rounded-xl transition shadow-sm font-bold w-full justify-center group-hover:justify-start mt-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            <span class="hidden group-hover:inline whitespace-nowrap text-sm">چاپ PDF</span>
+        </button>
+    </div>
+
+    <!-- صفحه جزوه -->
+    <div id="page" class="page-container portrait">
+        
+        <!-- هدر گرافیکی -->
+        <header class="header-graphic pt-8 px-8 relative">
+            <div class="flex flex-row justify-between items-center relative z-10 w-full h-24">
+                <div class="flex items-center gap-4 shrink-0">
+                    <div class="w-16 h-16 flex items-center justify-center filter drop-shadow-md shrink-0">
+                         <svg viewBox="0 0 100 100" width="70" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M75 45 Q 95 45 95 60 Q 95 75 75 75" fill="none" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M20 40 Q 20 95 50 95 Q 80 95 80 40" fill="white" stroke="white" stroke-width="2"/>
+                            <line x1="15" y1="95" x2="85" y2="95" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                            <g class="steam">
+                                <text x="40" y="36" font-family="sans-serif" font-size="12" fill="white" font-weight="bold">π</text>
+                                <text x="60" y="36" font-family="serif" font-size="12" fill="white" font-weight="bold">√</text>
+                                <text x="50" y="28" font-family="serif" font-size="14" fill="white" font-weight="bold">R</text>
+                            </g>
+                            <text x="50" y="70" font-family="'Dancing Script', cursive" font-size="12" fill="#047857" text-anchor="middle" font-weight="bold">Math Cafe</text>
+                        </svg>
+                    </div>
+                    <div class="shrink-0">
+                        <h1 class="text-4xl font-black tracking-tight text-white drop-shadow-md whitespace-nowrap" style="text-shadow: 0 2px 4px rgba(0,0,0,0.15);">کافه ریاضی</h1>
+                        <span class="text-emerald-100 text-sm font-bold opacity-90 block mt-2 whitespace-nowrap">Mathematics Note</span>
+                    </div>
+                </div>
+                <div class="input-wrapper shrink-0">
+                    <div class="glass-input-group">
+                        <span class="input-label">موضوع</span>
+                        <div id="subject-input" class="glass-input h-10 flex items-center justify-center cursor-text" contenteditable="true">قدر مطلق و تقریب</div>
+                    </div>
+                    <div class="glass-input-group">
+                        <span class="input-label">فصل</span>
+                        <div id="chapter-input" class="glass-input h-10 flex items-center justify-center" contenteditable="true">دوم</div>
+                    </div>
+                    <div class="glass-input-group">
+                        <span class="input-label">تاریخ</span>
+                        <div id="date-input" class="glass-input h-10 flex items-center justify-center" contenteditable="true">/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/</div>
+                    </div>
+                </div>
+            </div>
+            <svg class="header-wave" viewBox="0 0 1440 120" preserveAspectRatio="none">
+                <path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,85.3C672,75,768,85,864,90.7C960,96,1056,96,1152,85.3C1248,75,1344,53,1392,42.7L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </header>
+
+        <!-- بدنه اصلی -->
+        <main id="main-content" class="flex-grow w-full relative z-10 blank-pattern px-8 py-4">
+            <!-- واترمارک ثابت -->
+            <div class="watermark-container">
+                <div class="watermark-text">استاد فراهانی</div>
+                <div class="watermark-sub">Math Cafe</div>
+            </div>
+
+            <div id="ai-output" class="ai-content relative z-10 h-full">
+                
+                <h2>درس سوم: قدر مطلق و محاسبه تقریبی</h2>
+
+                <h3>۱. درس‌نامه و مفاهیم اصلی</h3>
+
+                <div class="formula-box">
+                    <strong>الف) مفهوم قدر مطلق (فاصله از مبدأ)</strong><br>
+                    در ریاضیات، قدر مطلق به معنای فاصله یک عدد تا صفر (مبدأ) روی محور اعداد است. چون فاصله نمی‌تواند منفی باشد، حاصل قدر مطلق همیشه عددی نامنفی (مثبت یا صفر) است.<br>
+                    قدر مطلق را با نماد دو خط عمودی <span class="math-ltr">| a |</span> نمایش می‌دهیم.<br>
+                    <strong>تعریف ریاضی:</strong><br>
+                    اگر <span class="math-ltr">a</span> یک عدد حقیقی باشد:<br>
+                    ۱. اگر <span class="math-ltr">a</span> مثبت باشد، قدر مطلق آن برابر خود <span class="math-ltr">a</span> است. (<span class="math-ltr">|۵| = ۵</span>)<br>
+                    ۲. اگر <span class="math-ltr">a</span> صفر باشد، قدر مطلق آن برابر صفر است. (<span class="math-ltr">|۰| = ۰</span>)<br>
+                    ۳. اگر <span class="math-ltr">a</span> منفی باشد، قدر مطلق آن برابر قرینه‌ی <span class="math-ltr">a</span> است. (<span class="math-ltr">|-۵| = -(-۵) = ۵</span>)
+                    <div class="text-center text-lg my-2 font-bold math-ltr">|a| = <span style="font-size: 1.2em;">{</span> <span style="display:inline-block; vertical-align:middle; text-align:left;">a &nbsp;&nbsp;&nbsp; if a ≥ ۰<br>-a &nbsp;&nbsp; if a < ۰</span></div>
+                </div>
+
+                <div class="formula-box">
+                    <strong>ب) رابطه قدر مطلق و رادیکال</strong><br>
+                    یکی از مهم‌ترین نکات این درس، رابطه بین ریشه دوم (جذر) و قدر مطلق است.<br>
+                    برای هر عدد حقیقی <span class="math-ltr">a</span> داریم:
+                    <div class="text-center text-lg my-2 font-bold math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">a²</span></span> = |a|</div>
+                    مثال: <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">(-۳)²</span></span> = <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۹</span></span> = ۳ = |-۳|</span>.
+                </div>
+
+                <div class="formula-box">
+                    <strong>ج) محاسبه تقریبی اعداد گنگ</strong><br>
+                    اعداد گنگ (مثل <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۱۰</span></span></span>) مقدار دقیق اعشاری ندارند. برای پیدا کردن مقدار تقریبی آن‌ها:<br>
+                    ۱. دو مربع کامل (عددی که جذر دقیق دارد) قبل و بعد از عدد مورد نظر را پیدا می‌کنیم.<br>
+                    ۲. مشخص می‌کنیم عدد به کدام‌یک نزدیک‌تر است.<br>
+                    ۳. با آزمایش کردن اعداد اعشاری (تا یک رقم)، مقدار تقریبی را می‌یابیم.
+                </div>
+
+                <h3>۲. مثال‌های آموزشی (از ساده به دشوار)</h3>
+
+                <div class="example-box">
+                    <p><strong>مثال ۱:</strong> حاصل عبارت‌های زیر را به دست آورید.<br>
+                    الف) <span class="math-ltr">|-۷|</span> &nbsp;&nbsp;&nbsp; ب) <span class="math-ltr">|۰|</span> &nbsp;&nbsp;&nbsp; ج) <span class="math-ltr">|۱۲|</span><br>
+                    <strong>پاسخ:</strong><br>
+                    الف) چون ۷- منفی است، قرینه می‌شود: ۷.<br>
+                    ب) فاصله صفر تا صفر: ۰.<br>
+                    ج) چون ۱۲ مثبت است، خودش می‌شود: ۱۲.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۲:</strong> حاصل عبارت <span class="math-ltr">|۵ - ۹|</span> را حساب کنید.<br>
+                    <strong>پاسخ:</strong><br>
+                    ابتدا داخل قدر مطلق را حساب می‌کنیم: <span class="math-ltr">۵ - ۹ = -۴</span>.<br>
+                    حالا قدر مطلق ۴- را می‌گیریم: <span class="math-ltr">|-۴| = ۴</span>.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۳:</strong> حاصل <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">(۱-<span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۲</span></span>)²</span></span></span> را ساده کنید.<br>
+                    <strong>پاسخ:</strong><br>
+                    طبق قانون رادیکال و توان ۲، این عبارت برابر است با <span class="math-ltr">|۱ - <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۲</span></span>|</span>.<br>
+                    باید علامت داخل قدر مطلق را تعیین کنیم. می‌دانیم <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۲</span></span> ≈ ۱/۴</span>.<br>
+                    پس <span class="math-ltr">۱ - ۱/۴</span> منفی است.<br>
+                    چون داخل منفی است، باید قرینه شود: <span class="math-ltr">-(۱ - <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۲</span></span>) = -۱ + <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۲</span></span></span> یا <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۲</span></span> - ۱</span>.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۴:</strong> اگر <span class="math-ltr">a = -۲</span> و <span class="math-ltr">b = ۳</span> باشد، حاصل <span class="math-ltr">|a - b| + |a × b|</span> را بیابید.<br>
+                    <strong>پاسخ:</strong><br>
+                    جایگذاری: <span class="math-ltr">|-۲ - ۳| + |(-۲) × ۳|</span>.<br>
+                    ساده‌سازی: <span class="math-ltr">|-۵| + |-۶|</span>.<br>
+                    محاسبه قدر مطلق‌ها: <span class="math-ltr">۵ + ۶ = ۱۱</span>.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۵:</strong> مقدار تقریبی <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۱۹</span></span></span> را با یک رقم اعشار پیدا کنید.<br>
+                    <strong>پاسخ:</strong><br>
+                    مربع‌های کامل اطراف ۱۹: <span class="math-ltr">۱۶ < ۱۹ < ۲۵</span>.<br>
+                    پس: <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۱۶</span></span> < <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۱۹</span></span> < <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۲۵</span></span> ⇒ ۴ < <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۱۹</span></span> < ۵</span>.<br>
+                    چون ۱۹ به ۱۶ نزدیک‌تر است تا ۲۵، پس جواب به ۴ نزدیک‌تر است.<br>
+                    امتحان می‌کنیم:<br>
+                    <span class="math-ltr"><span class="fraction"><span class="numerator">۴</span><span class="denominator">۳</span></span> × <span class="fraction"><span class="numerator">۴</span><span class="denominator">۳</span></span> = <span class="fraction"><span class="numerator">۱۸</span><span class="denominator">۴۹</span></span></span> و <span class="math-ltr"><span class="fraction"><span class="numerator">۴</span><span class="denominator">۴</span></span> × <span class="fraction"><span class="numerator">۴</span><span class="denominator">۴</span></span> = <span class="fraction"><span class="numerator">۱۹</span><span class="denominator">۳۶</span></span></span>.<br>
+                    عدد ۱۹ به ۱۹/۳۶ نزدیک‌تر است، پس <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۱۹</span></span> ≈ ۴/۴</span>.</p>
+                </div>
+
+                <h3>۳. نمونه سؤالات تشریحی حل‌شده (گام‌به‌گام)</h3>
+
+                <p class="question-title">سؤال ۱:</p>
+                <p>عبارت <span class="math-ltr">| π - ۴ | + | π - ۳ |</span> را بدون استفاده از نماد قدر مطلق بنویسید.<br>
+                <strong>حل:</strong><br>
+                مرحله ۱: تعیین علامت. می‌دانیم <span class="math-ltr">π ≈ ۳/۱۴</span>.<br>
+                پرانتز اول: <span class="math-ltr">۳/۱۴ - ۴</span> (منفی). پرانتز دوم: <span class="math-ltr">۳/۱۴ - ۳</span> (مثبت).<br>
+                مرحله ۲: اولی قرینه می‌شود: <span class="math-ltr">-(π - ۴) = -π + ۴</span>. دومی خودش: <span class="math-ltr">+(π - ۳)</span>.<br>
+                مرحله ۳: <span class="math-ltr">(-π + ۴) + (π - ۳) = -π + π + ۴ - ۳ = ۱</span>.<br>
+                پاسخ نهایی: ۱.</p>
+
+                <p class="question-title">سؤال ۲:</p>
+                <p>ریشه دوم عدد <span class="math-ltr">(۱-<span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۳</span></span>)²</span> را محاسبه کنید.<br>
+                <strong>حل:</strong><br>
+                یعنی <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">(۱-<span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۳</span></span>)²</span></span></span> که برابر است با <span class="math-ltr">|۱-<span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۳</span></span>|</span>.<br>
+                چون <span class="math-ltr">۱ < <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۳</span></span></span>، داخل قدر مطلق منفی است.<br>
+                حاصل برابر است با قرینه عبارت داخل: <span class="math-ltr">-(۱-<span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۳</span></span>) = <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۳</span></span> - ۱</span>.</p>
+
+                <p class="question-title">سؤال ۳:</p>
+                <p>جاهای خالی را با علامت >، < یا = پر کنید.<br>
+                الف) <span class="math-ltr">|-۵| ... |-۲|</span> &nbsp;&nbsp;&nbsp; ب) <span class="math-ltr">|-۳| ... ۳</span><br>
+                <strong>حل:</strong><br>
+                الف) <span class="math-ltr">۵ > ۲</span>، پس <span class="math-ltr">|-۵| > |-۲|</span>.<br>
+                ب) <span class="math-ltr">۳ = ۳</span>، پس برابرند.</p>
+
+                <p class="question-title">سؤال ۴:</p>
+                <p>اگر <span class="math-ltr">x < ۰</span> باشد، حاصل عبارت <span class="math-ltr">A = |x| - x</span> را ساده کنید.<br>
+                <strong>حل:</strong><br>
+                چون <span class="math-ltr">x</span> منفی است، <span class="math-ltr">|x|</span> برابر <span class="math-ltr">-x</span> می‌شود.<br>
+                جایگذاری: <span class="math-ltr">A = (-x) - x = -۲x</span>.</p>
+
+                <p class="question-title">سؤال ۵:</p>
+                <p>مقدار تقریبی عدد <span class="math-ltr">۱ + <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۱۰</span></span></span> را روی محور نمایش دهید.<br>
+                <strong>حل:</strong><br>
+                جای تقریبی <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۱۰</span></span></span> بین ۳ و ۴ است (نزدیک به ۳).<br>
+                چون <span class="math-ltr">۱ + <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۱۰</span></span></span> است، از ۱ روی محور شروع می‌کنیم و به اندازه <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۱۰</span></span></span> جلو می‌رویم.<br>
+                مقصد نهایی بین ۴ و ۵ خواهد بود.</p>
+
+                <h3>۴. تمرین‌های دانش‌آموزی (بدون پاسخ)</h3>
+                <ul>
+                    <li>۱. حاصل عبارت‌های زیر را به دست آورید: <span class="math-ltr">|-۱۲ + ۸|</span>، <span class="math-ltr">|-۵| × |۲|</span>، <span class="math-ltr">-|-۳|</span>.</li>
+                    <li>۲. عبارت <span class="math-ltr">| <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۵</span></span> - ۲ |</span> را بدون نماد قدر مطلق بنویسید.</li>
+                    <li>۳. اگر <span class="math-ltr">a=۴</span> و <span class="math-ltr">b=-۳</span> باشد، مقدار <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">(a+b)²</span></span></span> چقدر است؟</li>
+                    <li>۴. مقدار تقریبی <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۴۰</span></span></span> را با یک رقم اعشار محاسبه کنید.</li>
+                    <li>۵. عبارت <span class="math-ltr">A = |x - ۱|</span> را برای <span class="math-ltr">x > ۱</span> ساده کنید.</li>
+                    <li>۶. درستی رابطه <span class="math-ltr">|a + b| = |a| + |b|</span> را با <span class="math-ltr">a=۲, b=-۲</span> بررسی کنید.</li>
+                    <li>۷. عدد <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۱۸</span></span></span> روی محور بین کدام دو عدد صحیح است؟</li>
+                    <li>۸. حاصل <span class="math-ltr">|۳ - π| + |π - ۴|</span> را ساده کنید.</li>
+                    <li>۹. اگر <span class="math-ltr">x</span> منفی باشد، حاصل <span class="math-ltr"><span class="fraction"><span class="numerator">|x|</span><span class="denominator">x</span></span></span> چیست؟</li>
+                    <li>۱۰. جای خالی را پر کنید: <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">(...)²</span></span> = | -۷ |</span>.</li>
+                </ul>
+
+                <h3>۵. تست‌های چهارگزینه‌ای حل‌شده</h3>
+
+                <div class="example-box">
+                    <p><strong>تست ۱:</strong> حاصل <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">(۲-<span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۵</span></span>)²</span></span></span> کدام است؟</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) <span class="math-ltr">۲ - <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۵</span></span></span></div>
+                        <div class="test-option">ب) <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۵</span></span> - ۲</span></div>
+                        <div class="test-option">ج) <span class="math-ltr">۲ + <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۵</span></span></span></div>
+                        <div class="test-option">د) <span class="math-ltr">-۲ - <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۵</span></span></span></div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>ب</strong>. (چون داخل قدرمطلق منفی است، قرینه می‌شود).</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۲:</strong> اگر <span class="math-ltr">x < ۰</span> و <span class="math-ltr">y > ۰</span> باشد، حاصل <span class="math-ltr">|xy|</span> برابر است با:</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) <span class="math-ltr">xy</span></div>
+                        <div class="test-option">ب) <span class="math-ltr">-xy</span></div>
+                        <div class="test-option">ج) <span class="math-ltr">x</span></div>
+                        <div class="test-option">د) <span class="math-ltr">y</span></div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>ب</strong>. (چون حاصل‌ضرب منفی است، قرینه می‌شود).</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۳:</strong> حاصل <span class="math-ltr">|۵ - <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۳۰</span></span>|</span> کدام است؟</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) <span class="math-ltr">۵ - <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۳۰</span></span></span></div>
+                        <div class="test-option">ب) <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۳۰</span></span> - ۵</span></div>
+                        <div class="test-option">ج) ۵</div>
+                        <div class="test-option">د) <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۳۰</span></span></span></div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>ب</strong>. (چون <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۳۰</span></span> > ۵</span> است، داخل منفی است).</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۴:</strong> عدد <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۵۰</span></span></span> به کدام عدد صحیح نزدیک‌تر است؟</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) ۶</div>
+                        <div class="test-option">ب) ۷</div>
+                        <div class="test-option">ج) ۸</div>
+                        <div class="test-option">د) ۵</div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>ب</strong>. (۵۰ به ۴۹ نزدیک‌تر است تا ۶۴).</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۵:</strong> اگر <span class="math-ltr">|x| = ۰</span> باشد، آنگاه:</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) مثبت است</div>
+                        <div class="test-option">ب) منفی است</div>
+                        <div class="test-option">ج) هر عددی</div>
+                        <div class="test-option">د) صفر است</div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>د</strong>.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۶:</strong> حاصل <span class="math-ltr">|-۳ + ۷ - ۱۰|</span> چقدر است؟</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) ۶</div>
+                        <div class="test-option">ب) -۶</div>
+                        <div class="test-option">ج) ۱۴</div>
+                        <div class="test-option">د) ۰</div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>الف</strong>. (<span class="math-ltr">|-۶| = ۶</span>).</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۷:</strong> کدام رابطه همواره درست است؟</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">a²</span></span> = a</span></div>
+                        <div class="test-option">ب) <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">a²</span></span> = -a</span></div>
+                        <div class="test-option">ج) <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">a²</span></span> = |a|</span></div>
+                        <div class="test-option">د) <span class="math-ltr">|a| = a</span></div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>ج</strong>.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۸:</strong> اگر <span class="math-ltr">a > b</span> باشد، حاصل <span class="math-ltr">|b - a|</span> چیست؟</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) <span class="math-ltr">b - a</span></div>
+                        <div class="test-option">ب) <span class="math-ltr">a - b</span></div>
+                        <div class="test-option">ج) صفر</div>
+                        <div class="test-option">د) <span class="math-ltr">a + b</span></div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>ب</strong>. (چون <span class="math-ltr">b - a</span> منفی است، قرینه می‌شود).</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۹:</strong> مقدار تقریبی <span class="math-ltr">۱ - <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۲</span></span></span> با یک رقم اعشار:</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) ۰/۴</div>
+                        <div class="test-option">ب) ۰/۴-</div>
+                        <div class="test-option">ج) ۲/۴</div>
+                        <div class="test-option">د) ۲/۴-</div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>ب</strong>.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۱۰:</strong> حاصل <span class="math-ltr">| <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۵</span></span> - <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۲</span></span> |</span> برابر است با:</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۳</span></span></span></div>
+                        <div class="test-option">ب) <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۵</span></span> + <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۲</span></span></span></div>
+                        <div class="test-option">ج) <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۲</span></span> - <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۵</span></span></span></div>
+                        <div class="test-option">د) <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۵</span></span> - <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۲</span></span></span></div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>د</strong>. (مثبت است، خودش خارج می‌شود).</p>
+                </div>
+
+                <h3>۶. تست‌های تمرینی (بدون پاسخ)</h3>
+                
+                <div class="simple-test-item">
+                    <span class="test-number">۱.</span> حاصل عبارت <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">(۳ - π)²</span></span></span> کدام است؟
+                    <div class="test-options">
+                        <div class="test-option">الف) <span class="math-ltr">۳ - π</span></div>
+                        <div class="test-option">ب) <span class="math-ltr">π - ۳</span></div>
+                        <div class="test-option">ج) <span class="math-ltr">۳ + π</span></div>
+                        <div class="test-option">د) غیر قابل محاسبه</div>
+                    </div>
+                </div>
+
+                <div class="simple-test-item">
+                    <span class="test-number">۲.</span> اگر <span class="math-ltr">x = -۵</span> و <span class="math-ltr">y = -۲</span> باشد، حاصل <span class="math-ltr">|x - y|</span> کدام است؟
+                    <div class="test-options">
+                        <div class="test-option">الف) ۷</div>
+                        <div class="test-option">ب) ۳</div>
+                        <div class="test-option">ج) ۳-</div>
+                        <div class="test-option">د) ۷-</div>
+                    </div>
+                </div>
+
+                <div class="simple-test-item">
+                    <span class="test-number">۳.</span> عدد <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۸۰</span></span></span> بین کدام دو عدد صحیح قرار دارد؟
+                    <div class="test-options">
+                        <div class="test-option">الف) ۸ و ۹</div>
+                        <div class="test-option">ب) ۷ و ۸</div>
+                        <div class="test-option">ج) ۹ و ۱۰</div>
+                        <div class="test-option">د) ۴۰ و ۴۱</div>
+                    </div>
+                </div>
+
+                <div class="simple-test-item">
+                    <span class="test-number">۴.</span> حاصل عبارت <span class="math-ltr">|-۲| + |۲| - |-۴|</span> چیست؟
+                    <div class="test-options">
+                        <div class="test-option">الف) ۸</div>
+                        <div class="test-option">ب) ۴</div>
+                        <div class="test-option">ج) ۰</div>
+                        <div class="test-option">د) ۴-</div>
+                    </div>
+                </div>
+
+                <div class="simple-test-item">
+                    <span class="test-number">۵.</span> اگر <span class="math-ltr">a</span> منفی باشد، حاصل <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">a²</span></span> + a</span> کدام است؟
+                    <div class="test-options">
+                        <div class="test-option">الف) <span class="math-ltr">۲a</span></div>
+                        <div class="test-option">ب) <span class="math-ltr">-۲a</span></div>
+                        <div class="test-option">ج) ۰</div>
+                        <div class="test-option">د) <span class="math-ltr">a²</span></div>
+                    </div>
+                </div>
+
+                <div class="simple-test-item">
+                    <span class="test-number">۶.</span> کدام یک از عبارت‌های زیر نادرست است؟
+                    <div class="test-options">
+                        <div class="test-option">الف) <span class="math-ltr">|-x| = |x|</span></div>
+                        <div class="test-option">ب) <span class="math-ltr">|x²| = x²</span></div>
+                        <div class="test-option">ج) <span class="math-ltr">|x| ≥ ۰</span></div>
+                        <div class="test-option">د) <span class="math-ltr">|x + y| = |x| + |y|</span></div>
+                    </div>
+                </div>
+
+                <div class="simple-test-item">
+                    <span class="test-number">۷.</span> نزدیک‌ترین عدد صحیح به <span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۱۵۰</span></span></span> کدام است؟
+                    <div class="test-options">
+                        <div class="test-option">الف) ۱۰</div>
+                        <div class="test-option">ب) ۱۱</div>
+                        <div class="test-option">ج) ۱۲</div>
+                        <div class="test-option">د) ۱۳</div>
+                    </div>
+                </div>
+
+                <div class="simple-test-item">
+                    <span class="test-number">۸.</span> ساده شده‌ی عبارت <span class="math-ltr">|۱ - <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۳</span></span>| + |<span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۳</span></span> - ۲|</span> کدام است؟
+                    <div class="test-options">
+                        <div class="test-option">الف) ۱</div>
+                        <div class="test-option">ب) ۱-</div>
+                        <div class="test-option">ج) <span class="math-ltr">۲<span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۳</span></span> - ۳</span></div>
+                        <div class="test-option">د) <span class="math-ltr">۳ - ۲<span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">۳</span></span></span></div>
+                    </div>
+                </div>
+
+                <div class="simple-test-item">
+                    <span class="test-number">۹.</span> اگر <span class="math-ltr">|x| = ۵</span> باشد، <span class="math-ltr">x</span> چند مقدار می‌تواند داشته باشد؟
+                    <div class="test-options">
+                        <div class="test-option">الف) ۱</div>
+                        <div class="test-option">ب) ۲</div>
+                        <div class="test-option">ج) بی‌شمار</div>
+                        <div class="test-option">د) هیچی</div>
+                    </div>
+                </div>
+
+                <div class="simple-test-item">
+                    <span class="test-number">۱۰.</span> حاصل ضرب <span class="math-ltr">|-۴| × <span class="radical"><span class="rad-symbol">√</span><span class="rad-bar"><span class="fraction"><span class="numerator">۱</span><span class="denominator">۱۶</span></span></span></span></span> چقدر است؟
+                    <div class="test-options">
+                        <div class="test-option">الف) ۱</div>
+                        <div class="test-option">ب) ۱-</div>
+                        <div class="test-option">ج) ۴</div>
+                        <div class="test-option">د) <span class="fraction"><span class="numerator">۱</span><span class="denominator">۴</span></span></div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- فوتر (ثابت در تمام صفحات پرینت) -->
+        <footer class="footer-strip w-full px-8 py-3 relative z-20 flex-shrink-0">
+            <div class="flex items-center justify-between text-slate-700 w-full h-14">
+                <div class="flex items-center gap-1 font-bold text-slate-700 text-sm shrink-0 w-1/4">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span class="whitespace-nowrap">مدرس: استاد فراهانی</span>
+                </div>
+                <div class="flex flex-col items-center justify-center flex-1 px-2">
+                    <div class="text-[10px] text-slate-500 font-bold mb-1 text-center leading-tight">
+                        آدرس کانال ما در ایتا، روبیکا، بله و سروش :
+                        <span class="inline-block text-sky-600 whitespace-nowrap">(با کلیک روی آدرس به کانال ما بپیوندید)</span>
+                    </div>
+                    <a href="https://eitaa.com/math_cafe" target="_blank" class="flex items-center gap-2 bg-sky-50 hover:bg-sky-100 px-4 py-1 rounded-full border border-sky-200 transition group w-fit cursor-pointer text-decoration-none shadow-sm">
+                        <span class="w-1.5 h-1.5 rounded-full bg-sky-500 group-hover:animate-ping"></span>
+                        <span class="font-black text-sm dir-ltr text-sky-700" style="direction: ltr;">@math_cafe</span>
+                    </a>
+                </div>
+                <!-- بخش شماره صفحه در پرینت توسط مرورگر و کد @page پر می‌شود -->
+                <div class="flex justify-end shrink-0 w-1/4">
+                    <div class="text-[10px] text-slate-400 font-bold whitespace-nowrap no-print">
+                        
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        const page = document.getElementById('page');
+        const mainContent = document.getElementById('main-content');
+
+        function toggleOrientation() {
+            if (page.classList.contains('portrait')) {
+                page.classList.remove('portrait');
+                page.classList.add('landscape');
+            } else {
+                page.classList.remove('landscape');
+                page.classList.add('portrait');
+            }
+        }
+
+        function togglePattern() {
+            if (mainContent.classList.contains('grid-pattern')) {
+                mainContent.classList.remove('grid-pattern');
+                mainContent.classList.add('line-pattern');
+            } else if (mainContent.classList.contains('line-pattern')) {
+                mainContent.classList.remove('line-pattern');
+                mainContent.classList.add('blank-pattern');
+            } else {
+                mainContent.classList.remove('blank-pattern');
+                mainContent.classList.add('grid-pattern');
+            }
+        }
+
+        function clearContent() {
+            if(confirm('آیا مطمئن هستید که می‌خواهید متن صفحه را پاک کنید؟')) {
+                document.getElementById('ai-output').innerHTML = '';
+            }
+        }
+    </script>
+</body>
+</html>
