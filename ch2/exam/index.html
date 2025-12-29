@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آزمون ساز ریاضی نهم - فصل دوم: عددهای حقیقی</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Emerald Theme */
+            --primary-dark: #064e3b;   /* Emerald 900 */
+            --primary-main: #10b981;   /* Emerald 500 */
+            --primary-light: #ecfdf5;  /* Emerald 50 */
+            --secondary-main: #34d399; /* Emerald 400 */
+            --accent: #f59e0b;         /* Amber 500 */
+            --text-main: #0f172a;      /* Slate 900 */
+            --bg-paper: #ffffff;
+            --correct: #059669;        /* Emerald 600 */
+            --wrong: #dc2626;          /* Red 600 */
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f0fdf4;
+            background-image: radial-gradient(#6ee7b7 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+            margin: 0;
+            padding: 0;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Print Styles --- */
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; background-image: none; }
+            .quiz-container { box-shadow: none; border: 1px solid #ccc; margin: 0; width: 100%; max-width: 100%; }
+            .option-btn { background: #fff; border: 1px solid #ccc; break-inside: avoid; }
+            .review-item { break-inside: avoid; border: 1px solid #eee; }
+            #start-screen, #result-screen { display: none; }
+            #quiz-screen { display: block !important; }
+            /* Hide buttons inside quiz while printing */
+            #quiz-screen button { display: none; }
+        }
+
+        /* --- Header & Footer --- */
+        .header-graphic {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-main) 100%);
+            position: relative;
+            color: white;
+            padding-bottom: 60px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.5);
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+        .header-wave {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: auto;
+            color: #f0fdf4; fill: currentColor; z-index: 2;
+            opacity: 0.1;
+        }
+        
+        .footer-strip {
+            background: #ffffff;
+            margin-top: auto;
+            border-top: 1px solid #e2e8f0;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.02);
+        }
+
+        /* --- Math Styles --- */
+        .math-ltr {
+            direction: ltr;
+            display: inline-block;
+            unicode-bidi: embed;
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: bold;
+        }
+        /* LTR mark for correct negative sign placement */
+        .math-ltr::before { content: "\200E"; } 
+
+        .persian-num { font-feature-settings: "ss01"; }
+
+        /* Vertical Fraction */
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 4px;
+            font-size: 0.95em;
+            font-weight: bold;
+        }
+        .fraction .numerator {
+            border-bottom: 2px solid currentColor;
+            padding: 0 2px 1px 2px;
+            line-height: 1;
+            text-align: center;
+            width: 100%;
+        }
+        .fraction .denominator {
+            padding: 1px 2px 0 2px;
+            line-height: 1;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Radical with Vinculum */
+        .radical {
+            display: inline-flex;
+            align-items: baseline;
+            white-space: nowrap;
+        }
+        .rad-symbol {
+            font-size: 1.2em;
+            line-height: 1;
+            padding-right: 1px;
+        }
+        .rad-bar {
+            border-top: 2px solid currentColor;
+            padding-top: 2px;
+            margin-left: -1px;
+        }
+
+        /* --- Quiz UI --- */
+        .quiz-container {
+            max-width: 850px;
+            margin: -40px auto 40px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            z-index: 10;
+            padding: 40px;
+            min-height: 480px;
+        }
+
+        .question-card {
+            display: none;
+            animation: fadeIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .question-card.active { display: block; }
+
+        .option-btn {
+            width: 100%;
+            text-align: right;
+            padding: 18px 24px;
+            margin-bottom: 14px;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            background: #f1f5f9;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            font-size: 1.05rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .option-btn:hover {
+            background: #ecfdf5;
+            border-color: var(--primary-light);
+            transform: translateX(-4px);
+        }
+        .option-btn.selected {
+            border-color: var(--primary-main);
+            background: #d1fae5;
+            color: var(--primary-dark);
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+        
+        .option-btn.review-correct { border-color: var(--correct); background: #ecfdf5; color: #065f46; }
+        .option-btn.review-wrong { border-color: var(--wrong); background: #fef2f2; color: #991b1b; }
+
+        .hint-box {
+            background: #fffbeb;
+            border-left: 4px solid var(--accent);
+            padding: 16px;
+            margin-top: 24px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #92400e;
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-main), var(--secondary-main));
+            color: white;
+            padding: 14px 36px;
+            border-radius: 14px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: 0.3s;
+            box-shadow: 0 8px 20px -4px rgba(16, 185, 129, 0.4);
+        }
+        .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 25px -5px rgba(16, 185, 129, 0.5); }
+        .btn-primary:disabled { background: #cbd5e1; box-shadow: none; cursor: not-allowed; transform: none; }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--text-main);
+            border: 2px solid #e2e8f0;
+            padding: 12px 28px;
+            border-radius: 14px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn-secondary:hover { background: #f1f5f9; border-color: #cbd5e1; }
+        .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-outline {
+            border: 2px solid var(--primary-main);
+            color: var(--primary-main);
+            padding: 12px 30px;
+            border-radius: 14px;
+            font-weight: bold;
+            background: transparent;
+            transition: 0.2s;
+        }
+        .btn-outline:hover { background: var(--primary-light); color: var(--primary-dark); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideDown { from { opacity: 0; height: 0; transform: translateY(-5px); } to { opacity: 1; height: auto; transform: translateY(0); } }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 0.8; } 100% { transform: translateY(-25px) scale(1.2); opacity: 0; } }
+        
+        .steam text { animation: floatUp 3.5s infinite ease-out; opacity: 0; }
+        .steam text:nth-child(1) { animation-delay: 0s; }
+        .steam text:nth-child(2) { animation-delay: 1.5s; }
+        .steam text:nth-child(3) { animation-delay: 0.5s; }
+        
+        .review-item {
+            border: 1px solid #f1f5f9;
+            padding: 24px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            background: #fff;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+        }
+        .badge { display: inline-block; padding: 6px 14px; border-radius: 99px; font-size: 0.8rem; font-weight: 800; margin-left: 10px; }
+        .badge-correct { background: #d1fae5; color: #047857; }
+        .badge-wrong { background: #fee2e2; color: #b91c1c; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Floating Toolbar -->
+    <div class="no-print fixed top-4 right-4 bg-white/95 backdrop-blur shadow-2xl rounded-2xl z-50 p-3 border border-emerald-200 flex flex-col gap-3 w-16 hover:w-auto hover:px-4 transition-all group overflow-hidden">
+        <button onclick="window.print()" title="چاپ آزمون" class="flex items-center gap-3 p-2 rounded-xl hover:bg-emerald-50 text-emerald-700 transition w-full justify-center group-hover:justify-start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            <span class="hidden group-hover:inline whitespace-nowrap text-sm font-bold">چاپ</span>
+        </button>
+        <button onclick="location.reload()" title="آزمون جدید" class="flex items-center gap-3 p-2 rounded-xl hover:bg-emerald-50 text-emerald-700 transition w-full justify-center group-hover:justify-start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            <span class="hidden group-hover:inline whitespace-nowrap text-sm font-bold">آزمون جدید</span>
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header class="header-graphic pt-4 px-4 relative no-print">
+        <div class="relative z-10 w-full h-auto py-4 max-w-6xl mx-auto flex flex-col items-center justify-center gap-3">
+            <div class="flex items-center gap-4 bg-white/10 backdrop-blur-md px-8 py-3 rounded-2xl border border-white/20 shadow-lg">
+                <div class="w-16 h-16 flex items-center justify-center filter drop-shadow-xl shrink-0">
+                    <svg viewBox="0 0 100 100" width="70" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M75 45 Q 95 45 95 60 Q 95 75 75 75" fill="none" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M20 40 Q 20 95 50 95 Q 80 95 80 40" fill="white" stroke="white" stroke-width="2"/>
+                        <line x1="15" y1="95" x2="85" y2="95" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                        <g class="steam">
+                            <text x="40" y="36" font-family="sans-serif" font-size="12" fill="white" font-weight="bold">π</text>
+                            <text x="60" y="36" font-family="serif" font-size="12" fill="white" font-weight="bold">√</text>
+                            <text x="50" y="28" font-family="serif" font-size="14" fill="white" font-weight="bold">R</text>
+                        </g>
+                        <text x="50" y="70" font-family="'Dancing Script', cursive" font-size="12" fill="#064e3b" text-anchor="middle" font-weight="bold">Math Cafe</text>
+                    </svg>
+                </div>
+                <div class="text-center">
+                    <h1 class="text-4xl font-black tracking-tight text-white drop-shadow-lg mb-1">کافه ریاضی</h1>
+                    <div class="flex items-center justify-center gap-2">
+                        <span class="h-px w-8 bg-white/50"></span>
+                        <span class="text-emerald-50 text-sm font-bold tracking-wide">آزمون ساز آنلاین - فصل دوم</span>
+                        <span class="h-px w-8 bg-white/50"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow px-4 w-full max-w-4xl mx-auto">
+        
+        <!-- Start Screen -->
+        <div id="start-screen" class="quiz-container flex flex-col items-center justify-center text-center">
+            <div class="mb-8 bg-gradient-to-tr from-emerald-50 to-teal-50 p-8 rounded-full shadow-inner ring-4 ring-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-primary-main transform rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+            </div>
+            <h2 class="text-4xl font-black text-slate-800 mb-6 tracking-tight">آزمون جامع عددهای حقیقی</h2>
+            <div class="bg-emerald-50 px-6 py-4 rounded-2xl mb-8 border border-emerald-100">
+                <p class="text-slate-700 leading-8 text-lg max-w-lg font-medium">
+                    این سیستم دارای یک بانک سوال ۱۰۰ تایی از مباحث: <br>
+                    <span class="text-primary-main font-bold">عددهای گویا، عددهای حقیقی، قدر مطلق و تقریب</span> است.
+                </p>
+                <div class="mt-3 text-sm text-slate-500 flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                    هر بار ۲۰ سوال به صورت کاملاً تصادفی انتخاب می‌شود.
+                </div>
+            </div>
+            <button onclick="startQuiz()" class="btn-primary text-xl px-12 py-4">شروع آزمون</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="quiz-container hidden">
+            <div class="flex justify-between items-end mb-8 border-b border-slate-100 pb-6">
+                <div class="flex flex-col">
+                    <span class="text-slate-400 text-xs font-bold mb-2 uppercase tracking-wider">پیشرفت</span>
+                    <span class="text-slate-800 font-black text-2xl flex items-baseline gap-2">
+                        سؤال <span id="current-q-num" class="text-primary-main text-3xl">۱</span> 
+                        <span class="text-base text-slate-400 font-medium">از ۲۰</span>
+                    </span>
+                </div>
+                <div class="w-1/2 bg-slate-100 rounded-full h-4 overflow-hidden shadow-inner p-1">
+                    <div id="progress-bar" class="bg-gradient-to-l from-emerald-400 to-teal-600 h-full rounded-full transition-all duration-500 ease-out shadow-sm" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div id="question-container"></div>
+
+            <div class="flex justify-between items-center mt-12 pt-6 border-t border-slate-100 flex-wrap gap-4">
+                <div class="flex gap-2 w-full sm:w-auto justify-between sm:justify-start">
+                    <button id="prev-btn" onclick="prevQuestion()" class="btn-secondary disabled:opacity-50" disabled>سؤال قبلی</button>
+                    <button onclick="toggleHint()" class="flex items-center gap-2 text-amber-600 font-bold hover:text-amber-700 transition bg-amber-50 px-5 py-2.5 rounded-xl hover:bg-amber-100 border border-amber-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span class="hidden sm:inline">راهنما</span>
+                    </button>
+                </div>
+                <button id="next-btn" onclick="nextQuestion()" class="btn-primary w-full sm:w-auto" disabled>سؤال بعدی</button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="quiz-container hidden text-center">
+            <div class="mb-8 animate-bounce inline-block p-6 bg-white rounded-full shadow-xl ring-8 ring-emerald-50">
+                <svg id="score-icon" xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"></svg>
+            </div>
+            <h2 class="text-3xl font-black text-slate-800 mb-2">نتیجه نهایی</h2>
+            <div class="bg-slate-50 rounded-3xl p-8 mb-8 inline-block border border-slate-200 shadow-sm min-w-[250px]">
+                <span class="block text-slate-500 font-bold mb-2 text-sm">نمره شما</span>
+                <div class="text-7xl font-black text-emerald-600 pers-num leading-tight" style="direction: ltr;" id="final-score"></div>
+            </div>
+            <p id="score-msg" class="text-slate-600 mb-12 text-xl font-bold"></p>
+            <div class="flex gap-4 justify-center flex-wrap no-print">
+                <button onclick="showReview()" class="btn-outline border-2 px-8">بررسی پاسخ‌نامه</button>
+                <button onclick="resetAndRestart()" class="btn-primary px-8">آزمون مجدد</button>
+            </div>
+        </div>
+
+        <!-- Review Screen -->
+        <div id="review-screen" class="quiz-container hidden">
+            <div class="flex items-center justify-between mb-8 border-b border-slate-200 pb-6 no-print">
+                <h2 class="text-2xl font-black text-slate-800 flex items-center gap-3">پاسخ‌نامه تشریحی</h2>
+                <button onclick="backToResult()" class="text-sm font-bold text-slate-500 hover:text-primary-main transition">بازگشت</button>
+            </div>
+            <div id="review-container" class="space-y-6"></div>
+            <div class="mt-12 text-center pt-6 border-t border-slate-200 no-print">
+                <button onclick="resetAndRestart()" class="btn-primary px-10">آزمون مجدد</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-strip w-full px-6 py-6 mt-auto relative z-20 no-print">
+        <div class="flex flex-col md:flex-row items-center justify-between text-slate-700 w-full max-w-5xl mx-auto gap-6">
+            <div class="font-bold text-slate-500 text-sm flex items-center gap-2 bg-slate-50 px-4 py-2 rounded-full border border-slate-200">
+                <span class="w-2 h-2 rounded-full bg-secondary-main"></span>طراح: استاد فراهانی
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-left text-xs text-slate-400 hidden md:block leading-relaxed">
+                    <p class="font-bold text-slate-500">کانال ایتا، روبیکا، بله:</p>
+                </div>
+                <a href="https://eitaa.com/math_cafe" target="_blank" class="flex items-center gap-3 bg-white hover:bg-emerald-50 px-5 py-2.5 rounded-2xl border border-slate-200 hover:border-emerald-300 transition-all shadow-sm group">
+                    <span class="font-black text-lg dir-ltr text-emerald-600 font-sans tracking-tight">math_cafe@</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- Math Helpers (Left-to-Right Enforced) ---
+        const math = (content) => `<span class="math-ltr">${content}</span>`;
+        const frac = (n, d) => `<span class="math-ltr"><span class="fraction"><span class="numerator">${n}</span><span class="denominator">${d}</span></span></span>`;
+        const rad = (x) => `<span class="math-ltr"><span class="radical"><span class="rad-symbol">√</span><span class="rad-bar">${x}</span></span></span>`;
+        const abs = (x) => `<span class="math-ltr">|${x}|</span>`;
+        const pow = (base, exp) => `<span class="math-ltr">${base}<sup>${exp}</sup></span>`;
+        const neg = (x) => `<span class="math-ltr">-${x}</span>`;
+
+        // --- 100 QUESTIONS BANK (Chapter 2) ---
+        // Covers: Rational, Irrational, Real Numbers, Absolute Value, Approximation
+        const questionPool = [
+            // 1. Rational Numbers (Gooya)
+            { q: "کدام یک از کسرهای زیر نمایش اعشاری مختوم دارد؟", options: [frac("۳","۱۴"), frac("۵","۱۲"), frac("۷","۲۰"), frac("۲","۱۵")], correct: 2, hint: "مخرج کسر ساده‌شده باید فقط عامل ۲ یا ۵ داشته باشد.", rationale: "۲۰ = ۲ × ۲ × ۵. چون فقط عامل‌های ۲ و ۵ دارد، مختوم است." },
+            { q: "حاصل عبارت " + math(frac("۱","۲") + " - " + frac("۱","۳")) + " کدام است؟", options: [frac("۱","۶"), frac("۵","۶"), neg(frac("۱","۶")), frac("۱","۵")], correct: 0, hint: "مخرج مشترک ۶ بگیرید.", rationale: `${math(frac("۳","۶") + " - " + frac("۲","۶") + " = " + frac("۱","۶"))}` },
+            { q: "کدام عدد گویا بین " + math("۱") + " و " + math("۲") + " قرار دارد؟", options: [frac("۳","۲"), frac("۵","۲"), frac("۱","۳"), frac("۷","۳")], correct: 0, hint: "عدد را به اعشار تبدیل کنید یا با مخرج مشترک مقایسه کنید.", rationale: "سه دوم برابر ۱/۵ است که بین ۱ و ۲ قرار دارد." },
+            { q: "عدد اعشاری " + math("۰/۳") + " (با دوره گردش ۳) برابر کدام کسر است؟", options: [frac("۱","۳"), frac("۳","۱۰"), frac("۱","۴"), frac("۳","۹۰")], correct: 0, hint: "فرمول تبدیل عدد متناوب ساده به کسر.", rationale: "۰/۳۳۳... برابر است با یک سوم." },
+            { q: "معکوس عدد " + neg("۲" + frac("۱","۳")) + " کدام است؟", options: [neg(frac("۳","۷")), frac("۳","۷"), frac("۷","۳"), neg(frac("۷","۳"))], correct: 0, hint: "ابتدا عدد مخلوط را به کسر تبدیل کنید، سپس معکوس نمایید.", rationale: "عدد برابر " + neg(frac("۷","۳")) + " است، پس معکوس آن " + neg(frac("۳","۷")) + " می‌شود." },
+            { q: "بین هر دو عدد گویا، چند عدد گویای دیگر وجود دارد؟", options: ["بی‌شمار", "هیچ", "یکی", "محدود"], correct: 0, hint: "خاصیت چگالی اعداد گویا.", rationale: "طبق خاصیت چگالی، بین هر دو عدد گویا بی‌نهایت عدد گویا وجود دارد." },
+            { q: "کدام گزینه نادرست است؟", options: [math("ℚ ⊆ ℤ"), math("ℕ ⊆ ℤ"), math("ℤ ⊆ ℚ"), math("ℕ ⊆ ℚ")], correct: 0, hint: "آیا همه کسرها عدد صحیح هستند؟", rationale: "اعداد گویا شامل کسرها هستند که لزوماً صحیح نیستند." },
+            { q: "حاصل عبارت " + math(frac("۲","۵") + " ÷ " + frac("۴","۱۵")) + " چیست؟", options: [frac("۳","۲"), frac("۲","۳"), frac("۸","۷۵"), frac("۶","۵")], correct: 0, hint: "ضرب کسر اول در معکوس کسر دوم.", rationale: "ساده شده‌ی عبارت برابر ۳/۲ است." },
+            { q: "نمایش اعشاری کسر " + frac("۵","۸") + " چیست؟", options: [math("۰/۶۲۵"), math("۰/۶"), math("۰/۵۸"), math("۰/۸")], correct: 0, hint: "صورت را بر مخرج تقسیم کنید.", rationale: "۵ تقسیم بر ۸ برابر ۰/۶۲۵ است." },
+            { q: "قرینه معکوس عدد " + neg("۵") + " برابر است با:", options: [frac("۱","۵"), neg(frac("۱","۵")), math("۵"), neg("۵")], correct: 0, hint: "ابتدا معکوس کنید، سپس علامت را قرینه کنید.", rationale: "معکوس ۵- می‌شود ۱/۵-، و قرینه‌ی آن ۱/۵ است." },
+            { q: "کدام کسر بین " + frac("۱","۲") + " و " + frac("۱","۳") + " است؟", options: [frac("۵","۱۲"), frac("۱","۴"), frac("۱","۶"), frac("۲","۳")], correct: 0, hint: "مخرج مشترک ۱۲ بگیرید.", rationale: "بین ۶/۱۲ و ۴/۱۲، کسر ۵/۱۲ قرار دارد." },
+            { q: "حاصل " + pow("۵","-۲") + " کدام است؟", options: [frac("۱","۲۵"), neg("۲۵"), math("۲۵"), neg(frac("۱","۲۵"))], correct: 0, hint: "توان منفی عدد را معکوس می‌کند.", rationale: "۱ تقسیم بر ۵ به توان ۲." },
+            { q: "عدد مخلوط " + frac("۱۳","۴") + " برابر است با:", options: [math("۳" + frac("۱","۴")), math("۴" + frac("۱","۳")), math("۲" + frac("۳","۴")), math("۳" + frac("۳","۴"))], correct: 0, hint: "۱۳ تقسیم بر ۴.", rationale: "۳ و ۱/۴." },
+            { q: "نصف عدد " + pow("۴","۸") + " چیست؟", options: [pow("۲","۱۵"), pow("۲","۱۴"), pow("۴","۴"), pow("۲","۷")], correct: 0, hint: "پایه را ۲ کنید: ۲ به توان ۱۶.", rationale: "۲ به توان ۱۶ تقسیم بر ۲ می‌شود ۲ به توان ۱۵." },
+            { q: "حاصل " + neg("۲") + " × " + neg("۵") + "؟", options: [math("۱۰"), neg("۱۰"), math("۷"), neg("۷")], correct: 0, hint: "منفی در منفی.", rationale: "۱۰." },
+            { q: "کدام عدد گویا نیست؟", options: [rad("۱۲"), rad("۱۶"), math("۰"), math("-۵")], correct: 0, hint: "جذر کامل.", rationale: "رادیکال ۱۲ گنگ است." },
+            { q: "معکوس " + math("۰/۲") + " برابر است با:", options: [math("۵"), math("۰/۵"), math("۲"), math("۵۰")], correct: 0, hint: "۱/۵ معکوس شود.", rationale: "۵." },
+            { q: "حاصل " + pow("۱۰","-۲") + "؟", options: [math("۰/۰۱"), math("۰/۱"), math("۱۰۰"), math("۰/۰۰۱")], correct: 0, hint: "یک صدم.", rationale: "۰/۰۱." },
+            { q: "حاصل " + frac("۵","۹") + " - " + frac("۲","۹") + "؟", options: [frac("۱","۳"), frac("۳","۱۸"), frac("۷","۹"), frac("۱","۹")], correct: 0, hint: "۳/۹ ساده شود.", rationale: "۱/۳." },
+            { q: "کدام کسر مولد اعشار متناوب است؟", options: [frac("۱","۳"), frac("۱","۵"), frac("۱","۸"), frac("۱","۱۰")], correct: 0, hint: "مخرج عامل ۳ دارد.", rationale: "۱/۳." },
+            { q: "ربع عدد " + pow("۲","۶") + "؟", options: [pow("۲","۴"), pow("۲","۳"), pow("۲","۵"), math("۸")], correct: 0, hint: "تقسیم بر ۴ (۲ به توان ۲).", rationale: "۶ منهای ۲ می‌شود ۴." },
+            
+            // 2. Real Numbers & Irrational Numbers (Haghighi & Gong)
+            { q: "کدام یک از عددهای زیر گنگ است؟", options: [rad("۸"), rad("۹"), math("۳/۱۴"), rad("۰/۰۹")], correct: 0, hint: "عددی گنگ است که جذر کامل نداشته باشد یا اعشار نامتناوب باشد.", rationale: "رادیکال ۸ جذر کامل ندارد. بقیه گزینه‌ها گویا هستند." },
+            { q: "مجموعه اعداد گنگ را با چه نمادی نشان می‌دهند؟", options: [math("Q'"), math("Q"), math("R"), math("Z")], correct: 0, hint: "پریم به معنای متمم است.", rationale: "اعداد گنگ (اصم) با Q' نمایش داده می‌شوند." },
+            { q: "حاصل " + math("ℚ ∩ Q'") + " کدام است؟", options: [math("∅"), math("ℝ"), math("ℚ"), math("{0}")], correct: 0, hint: "اشتراک اعداد گویا و گنگ.", rationale: "هیچ عددی همزمان گویا و گنگ نیست، پس اشتراک تهی است." },
+            { q: "اجتماع مجموعه اعداد گویا و اعداد گنگ (" + math("ℚ ∪ Q'") + ") چه نام دارد؟", options: ["اعداد حقیقی", "اعداد صحیح", "اعداد حسابی", "اعداد طبیعی"], correct: 0, hint: "مجموعه مادر همه اعداد.", rationale: "اجتماع گویا و گنگ، مجموعه اعداد حقیقی (R) را می‌سازد." },
+            { q: "عدد " + rad("۵۰") + " بین کدام دو عدد صحیح متوالی قرار دارد؟", options: ["۷ و ۸", "۶ و ۷", "۵ و ۶", "۴۹ و ۵۱"], correct: 0, hint: "به مربع‌های کامل ۴۹ و ۶۴ توجه کنید.", rationale: "چون ۴۹ < ۵۰ < ۶۴، پس جذر ۵۰ بین ۷ و ۸ است." },
+            { q: "نقطه نمایش عدد " + rad("۲") + " روی محور اعداد چگونه پیدا می‌شود؟", options: ["رسم مثلث قائم‌الزاویه با اضلاع ۱", "با خط‌کش", "تقسیم محور", "حدس زدن"], correct: 0, hint: "استفاده از قضیه فیثاغورس.", rationale: "وتر مثلث قائم‌الزاویه با اضلاع قائمه ۱ و ۱ برابر رادیکال ۲ است." },
+            { q: "کدام عدد زیر گویا است؟", options: [rad("۰/۳۶"), rad("۱/۲"), rad("۵"), math("π")], correct: 0, hint: "کدام عدد جذر کامل دارد؟", rationale: "رادیکال ۰/۳۶ برابر ۰/۶ است که عددی گویاست." },
+            { q: "عدد " + rad("۱۰") + " به کدام عدد صحیح نزدیک‌تر است؟", options: ["۳", "۴", "۲", "۱۰"], correct: 0, hint: "۱۰ به ۹ نزدیک‌تر است یا ۱۶؟", rationale: "۱۰ به ۹ نزدیک‌تر است، پس جذر آن به ۳ نزدیک‌تر است." },
+            { q: "حاصل عبارت " + math("ℝ - ℚ") + " کدام مجموعه است؟", options: [math("Q'"), math("Z"), math("N"), math("∅")], correct: 0, hint: "اگر از حقیقی‌ها، گویاها را برداریم چه می‌ماند؟", rationale: "اعداد گنگ (Q') باقی می‌مانند." },
+            { q: "بین دو عدد " + rad("۲") + " و " + rad("۳") + " چند عدد گنگ وجود دارد؟", options: ["بی‌شمار", "هیچ", "یکی", "دو تا"], correct: 0, hint: "بین هر دو عدد حقیقی...", rationale: "بین هر دو عدد حقیقی، بی‌شمار عدد گنگ وجود دارد." },
+            { q: "آیا حاصل ضرب دو عدد گنگ همواره گنگ است؟", options: ["خیر", "بله", "همواره گویاست", "نامشخص"], correct: 0, hint: "مثال نقض: رادیکال ۲ ضربدر رادیکال ۲.", rationale: "رادیکال ۲ در رادیکال ۲ می‌شود ۲ که گویاست. پس همواره گنگ نیست." },
+            { q: "عدد " + rad("۴۰") + " بین کدام دو عدد صحیح است؟", options: ["۶ و ۷", "۵ و ۶", "۷ و ۸", "۴ و ۵"], correct: 0, hint: "مربع‌های کامل ۳۶ و ۴۹.", rationale: "بین ۶ و ۷ است." },
+            { q: "اگر شعاع دایره‌ای ۲ باشد، محیط آن عددی ... است.", options: ["گنگ", "گویا", "طبیعی", "صحیح"], correct: 0, hint: "فرمول محیط شامل عدد پی است.", rationale: "محیط برابر ۴پی است و چون پی گنگ است، محیط نیز گنگ است." },
+            { q: "کدام گزینه زیرمجموعه " + math("ℝ") + " نیست؟", options: ["اعداد مختلط", math("ℚ"), math("ℤ"), math("Q'")], correct: 0, hint: "مجموعه‌ای فراتر از حقیقی.", rationale: "اعداد مختلط شامل حقیقی هستند و زیرمجموعه آن نیستند." },
+            { q: "ضلع مربعی که مساحت آن ۵ باشد، عددی ... است.", options: ["گنگ", "گویا", "طبیعی", "صحیح"], correct: 0, hint: "ریشه دوم ۵.", rationale: "رادیکال ۵ عددی گنگ است." },
+            { q: "حاصل " + math("Q ∩ Z") + "؟", options: [math("Z"), math("Q"), math("N"), math("∅")], correct: 0, hint: "زیرمجموعه.", rationale: "Z." },
+            { q: "تعداد اعداد گویا بین " + rad("۲") + " و " + rad("۳") + "؟", options: ["بی‌شمار", "۰", "۱", "۲"], correct: 0, hint: "چگالی.", rationale: "بی‌شمار." },
+            { q: "اگر " + math("x² = ۳") + " باشد، x؟", options: [math("±" + rad("۳")), rad("۳"), math("۳"), math("۱/۵")], correct: 0, hint: "ریشه دوم.", rationale: "مثبت و منفی رادیکال ۳." },
+            { q: "آیا " + rad("۰") + " گنگ است؟", options: ["خیر", "بله"], correct: 0, hint: "۰.", rationale: "خیر، گویاست." },
+            { q: "فاصله ۱ تا " + rad("۵") + "؟", options: [math(rad("۵") + " - ۱"), math("۱ - " + rad("۵")), math("۲"), math("۳")], correct: 0, hint: "مثبت شود.", rationale: "رادیکال ۵ منهای ۱." },
+            { q: "کدام گنگ است؟", options: [rad("۲۰۰"), rad("۱۰۰"), rad("۴۰۰"), rad("۱/۴۴")], correct: 0, hint: "جذر دقیق ندارد.", rationale: "رادیکال ۲۰۰." },
+            { q: "عدد " + neg(rad("۱۷")) + " بین؟", options: ["۴- و ۵-", "۳- و ۴-", "۴ و ۵", "۱۶ و ۱۸"], correct: 0, hint: "بین ۱۶- و ۲۵-.", rationale: "۴- و ۵-." },
+            { q: "حاصل " + math("N ∪ Q'") + "؟", options: ["تهی نیست", "N", "Q'", "R"], correct: 0, hint: "اشتراک ندارند.", rationale: "یک مجموعه شامل اعضای هر دو." },
+            { q: "نقطه " + math("۱ + " + rad("۲")) + " روی محور؟", options: ["راست ۱", "چپ ۱", "روی ۱", "روی ۲"], correct: 0, hint: "شروع از ۱.", rationale: "از ۱ به اندازه رادیکال ۲ به راست." },
+            { q: "مجموع دو عدد گنگ؟", options: ["ممکن است گویا باشد", "همیشه گنگ", "همیشه گویا", "نامشخص"], correct: 0, hint: "رادیکال ۲ و منفی رادیکال ۲.", rationale: "ممکن است گویا شود (مثل صفر)." },
+
+            // 3. Absolute Value (Ghadre Motlagh)
+            { q: "حاصل " + abs(neg("۵")) + " برابر است با:", options: [math("۵"), neg("۵"), math("۰"), math("±۵")], correct: 0, hint: "قدر مطلق فاصله تا مبدأ است و همیشه نامنفی.", rationale: "قدر مطلق ۵- برابر ۵ است." },
+            { q: "حاصل " + rad(pow("(-۳)", "۲")) + " کدام است؟", options: [math("۳"), neg("۳"), math("۹"), math("±۳")], correct: 0, hint: "ابتدا توان را حساب کنید یا از فرمول قدر مطلق استفاده کنید.", rationale: "رادیکال (۳-) به توان ۲ برابر رادیکال ۹ یعنی ۳ است." },
+            { q: "اگر " + math("x < ۰") + " باشد، حاصل " + abs("x") + " چیست؟", options: [neg("x"), math("x"), math("۰"), math("۱")], correct: 0, hint: "برای مثبت کردن عدد منفی باید آن را در منفی ضرب کنیم.", rationale: "اگر x منفی باشد، قدر مطلق آن قرینه‌اش (x-) است." },
+            { q: "حاصل عبارت " + abs("۱ - " + rad("۲")) + " بدون قدر مطلق کدام است؟", options: [math(rad("۲") + " - ۱"), math("۱ - " + rad("۲")), math("۱ + " + rad("۲")), neg(math("۱") + " - " + rad("۲"))], correct: 0, hint: "چون رادیکال ۲ (۱.۴) از ۱ بزرگتر است، داخل قدر مطلق منفی است.", rationale: "داخل منفی است، پس قرینه می‌شود: رادیکال ۲ منهای ۱." },
+            { q: "حاصل " + abs("۵ - ۸") + " برابر است با:", options: [math("۳"), neg("۳"), math("۱۳"), neg("۱۳")], correct: 0, hint: "۵ منهای ۸ می‌شود ۳-.", rationale: "قدر مطلق ۳- برابر ۳ است." },
+            { q: "اگر " + math("a = ۳") + " و " + math("b = -۴") + " باشد، حاصل " + abs("a + b") + " کدام است؟", options: [math("۱"), math("۷"), neg("۱"), neg("۷")], correct: 0, hint: "۳ به اضافه ۴- می‌شود ۱-.", rationale: "قدر مطلق ۱- برابر ۱ است." },
+            { q: "کدام تساوی همواره درست است؟", options: [math(abs("ab") + " = " + abs("a") + abs("b")), math(abs("a+b") + " = " + abs("a") + "+" + abs("b")), math(abs("a") + " = a"), math(rad("a²") + " = a")], correct: 0, hint: "قدر مطلق در ضرب پخش می‌شود.", rationale: "قدر مطلق حاصل‌ضرب برابر حاصل‌ضرب قدر مطلق‌هاست." },
+            { q: "حاصل " + abs("π - ۳") + " چیست؟", options: [math("π - ۳"), math("۳ - π"), math("۳"), math("۰/۱۴")], correct: 0, hint: "عدد پی حدود ۳.۱۴ است و از ۳ بزرگتر است.", rationale: "چون داخل مثبت است، خودش بیرون می‌آید." },
+            { q: "عدد " + neg(rad("۳")) + " بین کدام دو عدد صحیح است؟", options: [math("۱- \u200C \u0648 \u200C ۲-"), math("۰ \u200C \u0648 \u200C ۱-"), math("۱ \u200C \u0648 \u200C ۲"), math("۲- \u200C \u0648 \u200C ۳-")], correct: 0, hint: "رادیکال ۳ بین ۱ و ۲ است، پس قرینه‌اش...", rationale: "بین ۱- و ۲- قرار دارد." },
+            { q: "حاصل " + abs("۰") + " برابر است با:", options: [math("۰"), math("۱"), "تعریف نشده", "تهی"], correct: 0, hint: "فاصله صفر تا صفر.", rationale: "برابر صفر است." },
+            { q: "ریشه دوم عدد " + pow("(۱-" + rad("۵") + ")", "۲") + " چیست؟", options: [math(rad("۵") + " - ۱"), math("۱ - " + rad("۵")), math("۱ + " + rad("۵")), math("۵")], correct: 0, hint: "جذر توان دو همان قدر مطلق است.", rationale: "چون داخل پرانتز منفی است، هنگام جذر گرفتن قرینه می‌شود." },
+            { q: "اگر " + math("x > ۰") + " باشد، حاصل " + frac(abs("x"),"x") + " کدام است؟", options: [math("۱"), neg("۱"), math("x"), math("۰")], correct: 0, hint: "صورت و مخرج با هم برابرند.", rationale: "برابر ۱ است." },
+            { q: "حاصل " + abs("۳ - " + rad("۱۰")) + " چیست؟", options: [math(rad("۱۰") + " - ۳"), math("۳ - " + rad("۱۰")), math("۷"), math("۳")], correct: 0, hint: "رادیکال ۱۰ بیشتر از ۳ است.", rationale: "داخل قدر مطلق منفی است، پس قرینه می‌شود." },
+            { q: "تعداد جواب‌های معادله " + abs("x") + " = ۵ کدام است؟", options: [math("۲"), math("۱"), math("۰"), "بی‌شمار"], correct: 0, hint: "هم ۵ و هم ۵-.", rationale: "دو جواب دارد: ۵ و ۵-." },
+            { q: "حاصل " + abs("۲ - ۵") + " + " + abs("۱ - ۳") + " کدام است؟", options: [math("۵"), math("۱"), math("۳"), math("۲")], correct: 0, hint: "قدر مطلق ۳- به اضافه قدر مطلق ۲-.", rationale: "۳ + ۲ = ۵." },
+            { q: "اگر " + abs("x") + " = " + neg("۲") + " باشد، مقدار x کدام است؟", options: ["وجود ندارد", math("۲"), neg("۲"), math("۲ \u200C \u0648 \u200C ۲-")], correct: 0, hint: "قدر مطلق نمی‌تواند منفی باشد.", rationale: "جواب تهی است." },
+            { q: "حاصل " + rad(pow("x","۲")) + " اگر " + math("x < ۰") + " باشد؟", options: [neg("x"), math("x"), math(abs("x")), "گزینه ۱ و ۳"], correct: 3, hint: "تعریف رادیکال و قدر مطلق.", rationale: "هم قدر مطلق x و هم x- صحیح هستند." },
+            { q: "حاصل " + abs(neg("۷")) + " - " + abs("۷") + " کدام است؟", options: [math("۰"), math("۱۴"), math("۷"), neg("۷")], correct: 0, hint: "۷ منهای ۷.", rationale: "برابر صفر است." },
+            { q: "فاصله نقطه " + neg("۳") + " تا " + math("۵") + " روی محور چقدر است؟", options: [math("۸"), math("۲"), math("۵"), neg("۸")], correct: 0, hint: "قدر مطلق تفاضل دو نقطه.", rationale: "|۳- - ۵| = |-۸| = ۸." },
+            { q: "حاصل " + abs("۱-" + rad("۳")) + " + " + abs(rad("۳") + "-۲") + " کدام است؟", options: [math("۱"), neg("۱"), math("۳"), math("۲" + rad("۳"))], correct: 0, hint: "تعیین علامت داخل هر قدر مطلق.", rationale: "(رادیکال ۳ منهای ۱) به اضافه (۲ منهای رادیکال ۳) برابر ۱ است." },
+            { q: "اگر " + math("a < b") + " باشد، حاصل " + abs("a - b") + " چیست؟", options: [math("b - a"), math("a - b"), math("۰"), math("a + b")], correct: 0, hint: "عدد کوچکتر منهای عدد بزرگتر منفی است.", rationale: "قرینه می‌شود: b - a." },
+            { q: "عبارت " + rad(pow("(x-۱)","۲")) + " به ازای " + math("x=۰") + " چه می‌شود؟", options: [math("۱"), neg("۱"), math("۰"), math("۲")], correct: 0, hint: "قدر مطلق ۱-.", rationale: "برابر ۱ است." },
+            { q: "آیا رابطه " + abs("x+y") + " ≤ " + abs("x") + "+" + abs("y") + " همواره برقرار است؟", options: ["بله", "خیر", "فقط برای مثبت‌ها", "فقط برای منفی‌ها"], correct: 0, hint: "نامساوی مثلثی.", rationale: "بله، این نامساوی مثلثی است و همواره برقرار است." },
+            { q: "حاصل " + abs(frac("۱","۲") + " - " + frac("۳","۲")) + " کدام است؟", options: [math("۱"), neg("۱"), math("۲"), math("۰")], correct: 0, hint: "۱/۲ منهای ۳/۲ می‌شود ۲/۲-.", rationale: "قدر مطلق ۱- برابر ۱ است." },
+            { q: "نزدیک‌ترین عدد صحیح به " + rad("۸۰") + " کدام است؟", options: [math("۹"), math("۸"), math("۱۰"), math("۸۱")], correct: 0, hint: "به ۸۱ نزدیک است.", rationale: "به ۹ نزدیک‌تر است." },
+            { q: "حاصل " + abs(math("۱ - \u03c0")) + "؟", options: [math("\u03c0 - ۱"), math("۱ - \u03c0"), math("۲"), math("۳")], correct: 0, hint: "پی ۳.۱۴.", rationale: "پی منهای ۱." },
+            { q: "اگر " + math("xy < ۰") + "، " + abs("xy") + "؟", options: [neg("xy"), math("xy"), math("۰"), math("۱")], correct: 0, hint: "منفی.", rationale: "xy-." },
+            { q: "قدر مطلق " + math("x²") + " برابر؟", options: [math("x²"), math("x"), neg("x²"), math("۱")], correct: 0, hint: "مثبت.", rationale: "خودش." },
+            { q: "حاصل " + abs(neg("۱۰")) + " + " + abs("۱۰") + "؟", options: [math("۲۰"), math("۰"), math("۱۰"), math("۱۰۰")], correct: 0, hint: "۱۰+۱۰.", rationale: "۲۰." },
+            { q: "اگر " + abs("x") + ">۰، x؟", options: ["غیر صفر", "مثبت", "منفی", "هر عددی"], correct: 0, hint: "فقط ۰ نیست.", rationale: "هر عدد غیر صفر." },
+            { q: "حاصل " + abs(rad("۳") + "-" + rad("۲")) + "؟", options: [math(rad("۳") + "-" + rad("۲")), math(rad("۲") + "-" + rad("۳")), math("۱"), math("۵")], correct: 0, hint: "۳>۲.", rationale: "خودش." },
+            { q: "تعداد اعداد صحیح با " + abs("x") + "<۲؟", options: [math("۳"), math("۲"), math("۴"), math("۵")], correct: 0, hint: "۱، ۰، ۱-.", rationale: "۳." },
+            { q: "قرینه " + abs("۵") + "؟", options: [neg("۵"), math("۵"), math("۰"), math("۱")], correct: 0, hint: "منفی ۵.", rationale: "۵-." },
+            { q: "حاصل " + rad(pow("(-۵)", "۲")) + "؟", options: [math("۵"), neg("۵"), math("۲۵"), math("۰")], correct: 0, hint: "۵.", rationale: "۵." },
+            { q: "اگر " + math("x") + " گنگ باشد، " + abs("x") + "؟", options: ["گنگ", "گویا", "صحیح", "نامشخص"], correct: 0, hint: "مثل رادیکال ۲.", rationale: "گنگ است." },
+            { q: "حاصل " + abs(frac("۲","۳") + "-" + "۱") + "؟", options: [frac("۱","۳"), neg(frac("۱","۳")), math("۱"), math("۰")], correct: 0, hint: "۱/۳-.", rationale: "۱/۳." },
+            { q: "بزرگترین عدد؟", options: [abs(neg("۱۰")), math("۹"), neg("۱۰۰"), math("۰")], correct: 0, hint: "۱۰.", rationale: "۱۰." },
+            { q: "حاصل " + abs(neg("۲") + "×" + "۳") + "؟", options: [math("۶"), neg("۶"), math("۵"), math("۱")], correct: 0, hint: "۶-.", rationale: "۶." },
+            { q: "اگر " + math("x=۰") + "، " + abs("x-۱") + "؟", options: [math("۱"), neg("۱"), math("۰"), math("۲")], correct: 0, hint: "۱-.", rationale: "۱." },
+            { q: "حاصل " + math(abs("x") + "×" + abs(neg("x"))) + "؟", options: [math("x²"), neg("x²"), math("۲x"), math("۰")], correct: 0, hint: "x در x.", rationale: "x به توان ۲." },
+            { q: "کدام عبارت برابر " + abs("a-b") + " است؟", options: [abs("b-a"), math("a-b"), math("b-a"), neg("a-b")], correct: 0, hint: "جابجایی.", rationale: "قدر مطلق b-a." },
+            { q: "حاصل " + abs("۱-" + rad("۵")) + "؟", options: [math(rad("۵") + "-۱"), math("۱-" + rad("۵")), math("۴"), math("۶")], correct: 0, hint: "منفی.", rationale: "قرینه." },
+            { q: "تقریب " + rad("۳") + "؟", options: [math("۱/۷"), math("۱/۴"), math("۲"), math("۱/۵")], correct: 0, hint: "۱/۷.", rationale: "۱/۷." },
+            { q: "حاصل " + abs(pow("(-۲)","۳")) + "؟", options: [math("۸"), neg("۸"), math("۶"), math("۴")], correct: 0, hint: "۸-.", rationale: "۸." },
+            { q: "اگر " + abs("x") + "≤۰، x؟", options: [math("۰"), math("۱"), "تهی", "منفی"], correct: 0, hint: "فقط ۰.", rationale: "۰." },
+            { q: "فاصله " + rad("۲") + " از مبدا؟", options: [rad("۲"), math("۲"), math("۱"), math("۱/۴")], correct: 0, hint: "خودش.", rationale: "رادیکال ۲." }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = [];
+        let currentQuizQuestions = [];
+
+        // --- Core Functions ---
+        function toPersianNum(num) {
+            const persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+            return num.toString().replace(/[0-9]/g, x => persian[x]);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            userAnswers = new Array(20).fill(null);
+            
+            // Randomly Select 20 Questions
+            const shuffledPool = shuffleArray([...questionPool]);
+            currentQuizQuestions = shuffledPool.slice(0, 20);
+            
+            // Randomize Options for each selected question
+            currentQuizQuestions.forEach(q => {
+                // Store original correct answer text
+                const correctText = q.options[q.correct];
+                // Shuffle options
+                const shuffledOptions = shuffleArray([...q.options]);
+                // Find new correct index
+                q.shuffledOptions = shuffledOptions;
+                q.newCorrectIndex = shuffledOptions.indexOf(correctText);
+            });
+
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function resetAndRestart() {
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('review-screen').classList.add('hidden');
+            startQuiz();
+        }
+
+        function backToResult() {
+            document.getElementById('review-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+        }
+
+        function loadQuestion() {
+            const q = currentQuizQuestions[currentQuestion];
+            document.getElementById('current-q-num').innerText = toPersianNum(currentQuestion + 1);
+            document.getElementById('progress-bar').style.width = ((currentQuestion + 1) / 20) * 100 + '%';
+            
+            const container = document.getElementById('question-container');
+            container.innerHTML = `
+                <div class="question-card active">
+                    <h3 class="text-xl font-bold text-slate-800 mb-8 leading-9">${q.q}</h3>
+                    <div class="space-y-4">
+                        ${q.shuffledOptions.map((opt, index) => `
+                            <div onclick="selectOption(${index})" class="option-btn group ${userAnswers[currentQuestion] === index ? 'selected' : ''}" id="opt-${index}">
+                                <div class="w-9 h-9 rounded-xl ${userAnswers[currentQuestion] === index ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-white text-slate-500 border-slate-200'} flex items-center justify-center ml-4 font-bold border transition-all group-hover:border-emerald-200 group-hover:text-emerald-500 shadow-sm shrink-0">${toPersianNum(index + 1)}</div>
+                                <span class="text-slate-700 font-medium group-hover:text-emerald-800 transition-colors w-full">${opt}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div id="hint-box" class="hint-box">
+                        <strong class="block mb-2 text-amber-600 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            راهنمای حل:
+                        </strong> 
+                        ${q.hint}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('prev-btn').disabled = (currentQuestion === 0);
+            const isAnswered = userAnswers[currentQuestion] !== null;
+            document.getElementById('next-btn').disabled = !isAnswered;
+            document.getElementById('next-btn').innerText = (currentQuestion === 19) ? "پایان آزمون" : "سؤال بعدی";
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        function selectOption(index) {
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+                btn.querySelector('div').classList.remove('bg-emerald-500', 'text-white', 'border-emerald-500');
+                btn.querySelector('div').classList.add('bg-white', 'text-slate-500', 'border-slate-200');
+            });
+            const selectedBtn = document.getElementById(`opt-${index}`);
+            selectedBtn.classList.add('selected');
+            const numBadge = selectedBtn.querySelector('div');
+            numBadge.classList.remove('bg-white', 'text-slate-500', 'border-slate-200');
+            numBadge.classList.add('bg-emerald-500', 'text-white', 'border-emerald-500');
+            
+            userAnswers[currentQuestion] = index;
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function toggleHint() {
+            const box = document.getElementById('hint-box');
+            box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < 19) {
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            score = 0;
+            userAnswers.forEach((ans, idx) => {
+                if (ans === currentQuizQuestions[idx].newCorrectIndex) score++;
+            });
+
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            
+            document.getElementById('final-score').innerText = `${toPersianNum(score)} / ${toPersianNum(20)}`;
+            
+            const msg = document.getElementById('score-msg');
+            const icon = document.getElementById('score-icon');
+            
+            if (score >= 18) {
+                msg.innerText = "فوق‌العاده! تسلط شما بر فصل دوم عالی است.";
+                msg.className = "text-emerald-600 mb-10 text-xl font-bold";
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" class="text-emerald-500" />';
+            } else if (score >= 12) {
+                msg.innerText = "خوب است! اما نیاز به تمرین بیشتر دارید.";
+                msg.className = "text-amber-500 mb-10 text-xl font-bold";
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" class="text-amber-500" />';
+            } else {
+                msg.innerText = "نیاز به تلاش بیشتر. مرور جزوه توصیه می‌شود.";
+                msg.className = "text-red-500 mb-10 text-xl font-bold";
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" class="text-red-500" />';
+            }
+        }
+
+        function showReview() {
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('review-screen').classList.remove('hidden');
+            
+            const container = document.getElementById('review-container');
+            container.innerHTML = currentQuizQuestions.map((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.newCorrectIndex;
+                const statusBadge = isCorrect 
+                    ? `<span class="badge badge-correct">درست</span>` 
+                    : `<span class="badge badge-wrong">نادرست</span>`;
+                
+                return `
+                    <div class="review-item border-r-4 ${isCorrect ? 'border-r-emerald-400' : 'border-r-red-400'}">
+                        <div class="flex items-start justify-between mb-4">
+                            <h4 class="font-bold text-slate-800 text-lg leading-8 w-full pl-4">
+                                <span class="text-slate-400 ml-2 text-sm bg-slate-100 px-2 py-1 rounded-md">سؤال ${toPersianNum(idx + 1)}</span>
+                                ${q.q}
+                            </h4>
+                            <div class="shrink-0">${statusBadge}</div>
+                        </div>
+                        <div class="grid gap-3 mb-5">
+                            ${q.shuffledOptions.map((opt, optIdx) => {
+                                let classes = "p-3 rounded-xl border text-sm flex items-center transition-colors ";
+                                let icon = "";
+                                if (optIdx === q.newCorrectIndex) {
+                                    classes += "bg-emerald-50 border-emerald-200 text-emerald-800 font-bold";
+                                    icon = `<svg class="w-5 h-5 mr-auto text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>`;
+                                } else if (optIdx === userAns && !isCorrect) {
+                                    classes += "bg-red-50 border-red-200 text-red-800";
+                                    icon = `<svg class="w-5 h-5 mr-auto text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>`;
+                                } else {
+                                    classes += "bg-white border-slate-100 text-slate-400 opacity-60";
+                                }
+                                return `<div class="${classes}">
+                                            <span class="ml-2 w-6 h-6 rounded-full bg-white/60 flex items-center justify-center text-xs border border-current opacity-80 shrink-0">${toPersianNum(optIdx + 1)}</span>
+                                            <span class="mr-2 w-full">${opt}</span>
+                                            ${icon}
+                                        </div>`;
+                            }).join('')}
+                        </div>
+                        <div class="bg-emerald-50 p-5 rounded-2xl text-sm text-emerald-900 leading-7 border border-emerald-100 flex gap-3">
+                            <div class="shrink-0 pt-1 text-emerald-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </div>
+                            <div>
+                                <strong class="text-emerald-700 block mb-1">توضیحات:</strong>
+                                ${q.rationale}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+    </script>
+</body>
+</html>
