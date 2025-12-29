@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جزوه ریاضی نهم - فصل دوم: عددهای حقیقی</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/shabnam-font@v5.0.1/dist/font-face.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- تنظیمات رنگی فصل دوم (سبز زمردی) --- */
+        :root {
+            --primary-dark: #047857;   /* Emerald 700 */
+            --primary-main: #10b981;   /* Emerald 500 */
+            --primary-light: #d1fae5;  /* Emerald 100 */
+            --accent: #d97706;         /* Amber 600 */
+            --text-main: #0f172a;      /* Slate 900 */
+            --bg-paper: #ffffff;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f0fdf4; /* Light Emerald Bg */
+            margin: 0;
+            padding: 20px 0;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* --- استایل کسرها --- */
+        .fraction {
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+            margin: 0 4px;
+            font-size: 0.95em;
+            font-weight: bold;
+        }
+        .fraction .numerator {
+            display: block;
+            border-bottom: 2px solid currentColor;
+            padding-bottom: 1px;
+            line-height: 1.1;
+        }
+        .fraction .denominator {
+            display: block;
+            padding-top: 1px;
+            line-height: 1.1;
+        }
+
+        /* --- انیمیشن بخار فنجان --- */
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 0.8; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(-25px) scale(1.2); opacity: 0; }
+        }
+
+        .steam text {
+            animation: floatUp 3s infinite ease-out;
+            transform-origin: center;
+            opacity: 0;
+        }
+
+        .steam text:nth-child(1) { animation-delay: 0s; }
+        .steam text:nth-child(2) { animation-delay: 1.5s; }
+        .steam text:nth-child(3) { animation-delay: 0.5s; }
+
+        /* --- کانتینر صفحه A4 --- */
+        .page-container {
+            background: var(--bg-paper);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            position: relative;
+            overflow: visible; 
+            min-height: 297mm;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .portrait { width: 210mm; }
+        .landscape { width: 297mm; }
+
+        /* --- تنظیمات اختصاصی کادرها --- */
+        .input-wrapper { display: flex; gap: 0.5rem; align-items: center; }
+        #subject-input { width: 14rem; } 
+        #chapter-input { width: 4rem; }
+        #date-input { width: 8rem; }
+        .landscape #subject-input { width: 20rem !important; }
+        
+        /* --- پترن‌ها --- */
+        .grid-pattern {
+            background-image: 
+                linear-gradient(#10b98115 1px, transparent 1px),
+                linear-gradient(90deg, #10b98115 1px, transparent 1px);
+            background-size: 25px 25px;
+            background-position: center 2px;
+        }
+        .line-pattern {
+            background-image: linear-gradient(#10b98115 1px, transparent 1px);
+            background-size: 100% 35px;
+            background-position: 0 35px;
+        }
+        .blank-pattern { background-image: none; }
+
+        /* --- هدر --- */
+        .header-graphic {
+            background: linear-gradient(135deg, var(--primary-main) 0%, var(--primary-dark) 100%);
+            position: relative;
+            color: white;
+            padding-bottom: 50px;
+            overflow: hidden;
+        }
+        .header-wave {
+            position: absolute; bottom: -1px; left: 0; width: 100%; height: auto;
+            color: var(--bg-paper); fill: currentColor; z-index: 2;
+        }
+
+        /* --- اینپوت‌های شیشه‌ای --- */
+        .glass-input-group { display: flex; flex-direction: column; align-items: center; z-index: 10; }
+        .glass-input {
+            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.4); color: white;
+            border-radius: 8px; transition: all 0.2s; text-align: center;
+            font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .input-label {
+            color: rgba(255, 255, 255, 0.95); font-size: 0.75rem; margin-bottom: 4px;
+            font-weight: bold; text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* --- واترمارک --- */
+        .watermark-container {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            width: 100%; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; pointer-events: none;
+            z-index: 0; opacity: 0.04;
+        }
+        .watermark-text {
+            font-size: 80px; font-weight: 900; color: var(--primary-dark);
+            white-space: nowrap; letter-spacing: -2px; line-height: 1.1; text-align: center;
+        }
+        .watermark-sub {
+            font-size: 90px; font-family: 'Dancing Script', cursive; font-weight: 700;
+            color: var(--primary-dark); letter-spacing: 0px; margin-top: 5px;
+        }
+
+        /* --- تایپوگرافی محتوا --- */
+        .ai-content {
+            font-family: 'Shabnam', 'Vazirmatn', sans-serif;
+            color: var(--text-main); line-height: 2.2; padding-bottom: 40px;
+        }
+        .ai-content h2 {
+            color: var(--primary-dark); font-size: 1.4rem; font-weight: 900;
+            margin-top: 2rem; margin-bottom: 1rem; border-bottom: 3px solid var(--primary-light);
+            display: inline-block; padding-bottom: 4px;
+        }
+        .ai-content h3 {
+             color: var(--primary-main); font-size: 1.1rem; font-weight: 800;
+             margin-top: 1.5rem; margin-bottom: 0.5rem;
+        }
+        .ai-content p { margin-bottom: 0.8rem; text-align: justify; font-size: 0.95rem; }
+        .ai-content strong { color: #065f46; font-weight: 900; }
+        
+        .ai-content ul { list-style-type: none; padding-right: 0; }
+        .ai-content li { position: relative; padding-right: 1.5rem; margin-bottom: 0.5rem; }
+        .ai-content li::before {
+            content: "•"; color: var(--accent); font-size: 1.5rem;
+            position: absolute; right: 0; top: -5px;
+        }
+
+        /* کلاس کمکی برای جهت اعداد انگلیسی/ریاضی */
+        .math-ltr {
+            direction: ltr;
+            display: inline-block;
+            unicode-bidi: embed;
+            font-family: 'Times New Roman', serif;
+            font-weight: bold;
+        }
+
+        /* باکس‌ها */
+        .formula-box {
+            background: #ecfdf5; border: 2px dashed #6ee7b7; border-radius: 12px;
+            padding: 1rem; margin: 1rem 0; font-size: 1rem; line-height: 2;
+            text-align: right;
+        }
+        .example-box {
+            background-color: #f8fafc; border-right: 4px solid var(--accent);
+            padding: 12px 18px; margin: 15px 0; border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        }
+        .question-title {
+            color: #d97706; font-weight: bold; display: block; margin-bottom: 5px;
+            margin-top: 15px; border-bottom: 1px dotted #ccc; padding-bottom: 2px; width: fit-content;
+        }
+
+        /* استایل اختصاصی برای تست‌های پایانی (بدون کادر) */
+        .simple-test-item {
+            padding: 10px 0;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .simple-test-item:last-child { border-bottom: none; }
+        .test-number {
+            color: var(--primary-dark);
+            font-weight: 900;
+            margin-left: 5px;
+        }
+
+        /* چیدمان تست‌ها (خطی) */
+        .test-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 8px;
+            margin-bottom: 5px;
+            padding-right: 15px;
+        }
+        .test-option {
+            font-size: 0.95rem;
+            white-space: nowrap;
+            color: #334155;
+        }
+
+        /* جداول */
+        table {
+            width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.95rem;
+        }
+        th, td {
+            border: 1px solid #e5e7eb; padding: 10px; text-align: center;
+        }
+        th { background-color: var(--primary-light); color: var(--primary-dark); font-weight: bold; }
+        tr:nth-child(even) { background-color: #f9fafb; }
+
+        /* --- فوتر --- */
+        .footer-strip {
+            border-top: 3px solid var(--primary-dark);
+            background: #f8fafc;
+        }
+
+        /* --- تنظیمات حیاتی پرینت --- */
+        @page {
+            size: auto;
+            margin-top: 140px; margin-bottom: 70px; margin-left: 10mm; margin-right: 10mm;
+            @bottom-center { content: "صفحه " counter(page); font-family: 'Vazirmatn'; font-size: 9pt; }
+        }
+
+        @media print {
+            html, body { width: 100%; height: 100%; margin: 0; padding: 0; background-color: white; }
+            .no-print { display: none !important; }
+            .page-container {
+                margin: 0; padding: 0; box-shadow: none; border: none;
+                page-break-after: always; print-color-adjust: exact;
+                height: auto !important; min-height: auto; display: block; width: 100% !important;
+            }
+            .header-graphic { position: fixed; top: 0; left: 0; right: 0; height: 120px; margin-top: -140px; z-index: 1000; padding-bottom: 0; }
+            .footer-strip { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; margin-bottom: -70px; z-index: 1000; }
+            .watermark-container { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); z-index: -1; opacity: 0.04; width: 100%; }
+            h2 { page-break-before: auto; }
+            .example-box { page-break-inside: avoid; }
+            .simple-test-item { page-break-inside: avoid; }
+            .ai-content { padding-top: 20px; }
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center">
+
+    <!-- نوار ابزار کنترل -->
+    <div class="no-print fixed top-4 right-4 bg-white/95 backdrop-blur shadow-2xl rounded-2xl z-50 p-3 border border-slate-200 flex flex-col gap-3 w-16 hover:w-auto hover:px-4 transition-all group overflow-hidden">
+        <button onclick="toggleOrientation()" title="تغییر جهت کاغذ" class="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-100 text-slate-600 transition w-full justify-center group-hover:justify-start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>
+            <span class="hidden group-hover:inline whitespace-nowrap text-sm">چرخش کاغذ</span>
+        </button>
+        <button onclick="togglePattern()" title="تغییر نوع خط‌کشی" class="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-100 text-slate-600 transition w-full justify-center group-hover:justify-start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+            <span class="hidden group-hover:inline whitespace-nowrap text-sm">تغییر خطوط</span>
+        </button>
+        <button onclick="clearContent()" title="پاک کردن محتوا" class="flex items-center gap-3 p-2 rounded-xl hover:bg-red-50 text-red-500 transition w-full justify-center group-hover:justify-start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+            <span class="hidden group-hover:inline whitespace-nowrap text-sm">پاک کردن</span>
+        </button>
+        <button onclick="window.print()" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white px-2 py-2 rounded-xl transition shadow-sm font-bold w-full justify-center group-hover:justify-start mt-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            <span class="hidden group-hover:inline whitespace-nowrap text-sm">چاپ PDF</span>
+        </button>
+    </div>
+
+    <!-- صفحه جزوه -->
+    <div id="page" class="page-container portrait">
+        
+        <!-- هدر گرافیکی -->
+        <header class="header-graphic pt-8 px-8 relative">
+            <div class="flex flex-row justify-between items-center relative z-10 w-full h-24">
+                <div class="flex items-center gap-4 shrink-0">
+                    <div class="w-16 h-16 flex items-center justify-center filter drop-shadow-md shrink-0">
+                         <svg viewBox="0 0 100 100" width="70" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M75 45 Q 95 45 95 60 Q 95 75 75 75" fill="none" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M20 40 Q 20 95 50 95 Q 80 95 80 40" fill="white" stroke="white" stroke-width="2"/>
+                            <line x1="15" y1="95" x2="85" y2="95" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                            <g class="steam">
+                                <text x="40" y="36" font-family="sans-serif" font-size="12" fill="white" font-weight="bold">π</text>
+                                <text x="60" y="36" font-family="serif" font-size="12" fill="white" font-weight="bold">√</text>
+                                <text x="50" y="28" font-family="serif" font-size="14" fill="white" font-weight="bold">R</text>
+                            </g>
+                            <text x="50" y="70" font-family="'Dancing Script', cursive" font-size="12" fill="#047857" text-anchor="middle" font-weight="bold">Math Cafe</text>
+                        </svg>
+                    </div>
+                    <div class="shrink-0">
+                        <h1 class="text-4xl font-black tracking-tight text-white drop-shadow-md whitespace-nowrap" style="text-shadow: 0 2px 4px rgba(0,0,0,0.15);">کافه ریاضی</h1>
+                        <span class="text-emerald-100 text-sm font-bold opacity-90 block mt-2 whitespace-nowrap">Mathematics Note</span>
+                    </div>
+                </div>
+                <div class="input-wrapper shrink-0">
+                    <div class="glass-input-group">
+                        <span class="input-label">موضوع</span>
+                        <div id="subject-input" class="glass-input h-10 flex items-center justify-center cursor-text" contenteditable="true">عددهای حقیقی</div>
+                    </div>
+                    <div class="glass-input-group">
+                        <span class="input-label">فصل</span>
+                        <div id="chapter-input" class="glass-input h-10 flex items-center justify-center" contenteditable="true">دوم</div>
+                    </div>
+                    <div class="glass-input-group">
+                        <span class="input-label">تاریخ</span>
+                        <div id="date-input" class="glass-input h-10 flex items-center justify-center" contenteditable="true">/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/</div>
+                    </div>
+                </div>
+            </div>
+            <svg class="header-wave" viewBox="0 0 1440 120" preserveAspectRatio="none">
+                <path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,85.3C672,75,768,85,864,90.7C960,96,1056,96,1152,85.3C1248,75,1344,53,1392,42.7L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </header>
+
+        <!-- بدنه اصلی -->
+        <main id="main-content" class="flex-grow w-full relative z-10 blank-pattern px-8 py-4">
+            <!-- واترمارک ثابت -->
+            <div class="watermark-container">
+                <div class="watermark-text">استاد فراهانی</div>
+                <div class="watermark-sub">Math Cafe</div>
+            </div>
+
+            <div id="ai-output" class="ai-content relative z-10 h-full">
+                
+                <h2>درس دوم: عددهای حقیقی</h2>
+
+                <h3>۱. درس‌نامه و مفاهیم اصلی</h3>
+
+                <div class="formula-box">
+                    <strong>الف) یادآوری عددهای گویا (<span class="math-ltr">ℚ</span>)</strong><br>
+                    هر عددی را که بتوان به صورت کسر <span class="math-ltr"><span class="fraction"><span class="numerator">a</span><span class="denominator">b</span></span></span> نوشت (که <span class="math-ltr">a, b ∈ ℤ</span> و <span class="math-ltr">b ≠ ۰</span>)، عدد گویا نامیده می‌شود. اعداد اعشاری مختوم (مثل <span class="math-ltr">۰/۵</span>) و متناوب (مثل <span class="math-ltr">۰/۳̅</span>) همگی گویا هستند.
+                </div>
+
+                <div class="formula-box">
+                    <strong>ب) معرفی عددهای گنگ (اصم)</strong><br>
+                    اعدادی که نمی‌توان آن‌ها را به صورت کسر <span class="math-ltr"><span class="fraction"><span class="numerator">a</span><span class="denominator">b</span></span></span> نوشت. مجموعه آن‌ها را با حرف <span class="math-ltr">Q'</span> (یا <span class="math-ltr">Q<sup>c</sup></span>) نمایش می‌دهند.<br>
+                    <strong>ویژگی اصلی:</strong> نمایش اعشاری این اعداد، نه مختوم است و نه متناوب. ارقام اعشاری آن‌ها به‌صورت نامنظم تا بی‌نهایت ادامه دارد.<br>
+                    <strong>معروف‌ترین عددهای گنگ:</strong><br>
+                    ۱. عدد پی (<span class="math-ltr">π ≈ ۳/۱۴۱۵۹...</span>)<br>
+                    ۲. رادیکال‌هایی که جذر کامل ندارند: <span class="math-ltr">√۲</span>، <span class="math-ltr">√۳</span>، <span class="math-ltr">√۵</span>.<br>
+                    <span class="text-sm text-red-600">نکته: <span class="math-ltr">√۴</span> گنگ نیست چون برابر ۲ است (گویا).</span>
+                </div>
+
+                <div class="formula-box">
+                    <strong>ج) مجموعه عددهای حقیقی (<span class="math-ltr">ℝ</span>)</strong><br>
+                    اجتماع مجموعه عددهای گویا و گنگ، مجموعه عددهای حقیقی را می‌سازد.<br>
+                    <div class="text-center text-lg my-2"><span class="math-ltr">ℝ = ℚ ∪ Q'</span></div>
+                    نکته: اشتراک عددهای گویا و گنگ تهی است (<span class="math-ltr">ℚ ∩ Q' = ∅</span>).<br>
+                    زیرمجموعه‌ها: <span class="math-ltr">ℕ ⊆ W ⊆ ℤ ⊆ ℚ ⊆ ℝ</span>
+                </div>
+
+                <!-- نمودار ون -->
+                <div class="flex justify-center mt-4 mb-8">
+                    <svg width="350" height="200" viewBox="0 0 350 200">
+                        <!-- Box R -->
+                        <rect x="5" y="5" width="340" height="190" rx="10" fill="#ecfdf5" stroke="#047857" stroke-width="3"/>
+                        <text x="310" y="30" font-size="16" fill="#047857" font-weight="bold">R</text>
+                        
+                        <!-- Blob Q (Rational) - Larger to hold others -->
+                        <ellipse cx="130" cy="100" rx="110" ry="80" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+                        <text x="130" y="40" font-size="14" fill="#065f46" font-weight="bold" text-anchor="middle">Q</text>
+                
+                        <!-- Blob Z (Integers) -->
+                        <ellipse cx="130" cy="110" rx="85" ry="55" fill="#a7f3d0" stroke="#059669" stroke-width="2"/>
+                        <text x="130" y="75" font-size="12" fill="#064e3b" font-weight="bold" text-anchor="middle">Z</text>
+                
+                        <!-- Blob W (Whole) -->
+                        <ellipse cx="130" cy="125" rx="60" ry="35" fill="#6ee7b7" stroke="#047857" stroke-width="2"/>
+                        <text x="130" y="110" font-size="12" fill="#064e3b" font-weight="bold" text-anchor="middle">W</text>
+                
+                        <!-- Blob N (Natural) -->
+                        <ellipse cx="130" cy="135" rx="35" ry="18" fill="#34d399" stroke="#064e3b" stroke-width="2"/>
+                        <text x="130" y="140" font-size="12" fill="white" font-weight="bold" text-anchor="middle">N</text>
+                
+                        <!-- Blob Q' (Irrational) - Separate -->
+                        <ellipse cx="290" cy="100" rx="40" ry="60" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+                        <text x="290" y="105" font-size="14" fill="#92400e" font-weight="bold" text-anchor="middle">Q'</text>
+                    </svg>
+                </div>
+
+                <h3>۲. مثال‌های آموزشی (از ساده به دشوار)</h3>
+
+                <div class="example-box">
+                    <p><strong>مثال ۱:</strong> مشخص کنید کدام‌یک گنگ هستند؟ <span class="math-ltr">√۹</span> ، <span class="math-ltr">π</span> ، <span class="math-ltr">-۲/۵</span> ، <span class="math-ltr">√۸</span> ، <span class="math-ltr">۰</span><br>
+                    <strong>پاسخ:</strong> <span class="math-ltr">π</span> و <span class="math-ltr">√۸</span> گنگ هستند. (چون <span class="math-ltr">√۹=۳</span> گویاست و ۸ مربع کامل نیست).</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۲:</strong> عدد <span class="math-ltr">√۱۰</span> بین کدام دو عدد صحیح متوالی قرار دارد؟<br>
+                    <strong>پاسخ:</strong> <span class="math-ltr">√۹ < √۱۰ < √۱۶</span> ⇒ <span class="math-ltr">۳ < √۱۰ < ۴</span>. بین ۳ و ۴.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۳:</strong> حاصل <span class="math-ltr">ℝ - Q'</span> چیست؟<br>
+                    <strong>پاسخ:</strong> اگر از حقیقی‌ها، گنگ‌ها را برداریم، <strong>اعداد گویا (<span class="math-ltr">ℚ</span>)</strong> می‌مانند.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۴:</strong> آیا <span class="math-ltr">۰/۳۰۳۰۰۳۰۰۰۳...</span> گویا است؟<br>
+                    <strong>پاسخ:</strong> خیر، الگوی تکراری منظم (دوره گردش) ندارد، پس <strong>گنگ</strong> است.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۵:</strong> نمایش <span class="math-ltr">۱ + √۵</span> روی محور.<br>
+                    <strong>پاسخ:</strong> از نقطه ۱ روی محور، مثلث قائم‌الزاویه با اضلاع ۱ و ۲ (چون <span class="math-ltr">۱<sup>۲</sup>+۲<sup>۲</sup>=۵</span>) رسم کرده و کمانی به شعاع وتر می‌زنیم.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۶:</strong> بین <span class="math-ltr">√۲</span> و <span class="math-ltr">√۳</span> دو عدد گنگ بنویسید.<br>
+                    <strong>پاسخ:</strong> <span class="math-ltr">√۲/۱</span> و <span class="math-ltr">√۲/۵</span> (اعدادی که جذر کامل ندارند و زیر رادیکال بین ۲ و ۳ هستند).</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۷:</strong> اعضای <span class="math-ltr">A = {x ∈ ℝ | x<sup>۲</sup> = ۷}</span> را بنویسید.<br>
+                    <strong>پاسخ:</strong> <span class="math-ltr">A = { √۷, -√۷ }</span>.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۸:</strong> حاصل <span class="math-ltr">|√۵ - ۳|</span> را ساده کنید.<br>
+                    <strong>پاسخ:</strong> چون <span class="math-ltr">√۵ ≈ ۲/۲</span> است، داخل قدرمطلق منفی می‌شود. پس قرینه خارج می‌شود: <span class="math-ltr">۳ - √۵</span>.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۹:</strong> آیا مجموع دو عدد گنگ، همواره گنگ است؟<br>
+                    <strong>پاسخ:</strong> خیر. مثال نقض: <span class="math-ltr">√۲ + (-√۲) = ۰</span> (صفر گویاست).</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>مثال ۱۰:</strong> مجموعه <span class="math-ltr">A = {x ∈ ℝ | ۰ ≤ x ≤ ۱}</span> چند عضو دارد؟<br>
+                    <strong>پاسخ:</strong> بی‌شمار عدد حقیقی (هم گویا و هم گنگ).</p>
+                </div>
+
+                <h3>۳. نمونه سؤالات تشریحی حل‌شده</h3>
+
+                <p class="question-title">سؤال ۱:</p>
+                <p>عبارت‌ها را با <span class="math-ltr">∈</span> یا <span class="math-ltr">∉</span> کامل کنید.<br>
+                الف) <span class="math-ltr">√۱۲ ... ℚ</span> &nbsp;&nbsp;&nbsp; ب) <span class="math-ltr">π ... ℝ</span> &nbsp;&nbsp;&nbsp; ج) <span class="math-ltr">۰ ... Q'</span><br>
+                <strong>حل:</strong> الف) <span class="math-ltr">∉</span> (گنگ است). ب) <span class="math-ltr">∈</span> (حقیقی است). ج) <span class="math-ltr">∉</span> (صفر گویاست).</p>
+
+                <p class="question-title">سؤال ۲:</p>
+                <p>مجموعه <span class="math-ltr">A = {x ∈ ℝ | -۱ < x ≤ ۲}</span> را روی محور نمایش دهید.<br>
+                <strong>حل:</strong> دایره توخالی روی ۱-، دایره توپر روی ۲، و خط بین آن‌ها پررنگ می‌شود.</p>
+
+                <p class="question-title">سؤال ۳:</p>
+                <p>حاصل <span class="math-ltr">(ℤ ∪ ℚ) ∩ ℕ</span> را بیابید.<br>
+                <strong>حل:</strong> پرانتز می‌شود <span class="math-ltr">ℚ</span>. اشتراک <span class="math-ltr">ℚ</span> با <span class="math-ltr">ℕ</span> می‌شود خود <strong><span class="math-ltr">ℕ</span></strong>.</p>
+
+                <p class="question-title">سؤال ۴:</p>
+                <p>مقدار تقریبی <span class="math-ltr">√۱۸</span> با یک رقم اعشار.<br>
+                <strong>حل:</strong> بین ۴ و ۵ است، نزدیک به ۴. حدس: ۴/۲. (<span class="math-ltr">۴/۲<sup>۲</sup> = ۱۷/۶۴</span>). پاسخ: <strong>۴/۲</strong>.</p>
+
+                <p class="question-title">سؤال ۵:</p>
+                <p>اگر شعاع دایره ۲ باشد، محیط آن گویاست یا گنگ؟<br>
+                <strong>حل:</strong> <span class="math-ltr">P = ۲πr = ۴π</span>. چون <span class="math-ltr">π</span> گنگ است، حاصل <strong>گنگ</strong> است.</p>
+
+                <p class="question-title">سؤال ۶:</p>
+                <p>جای خالی: «بین هر دو عدد گویا، بی‌شمار عدد ............... وجود دارد.»<br>
+                <strong>حل:</strong> هم گویا و هم گنگ.</p>
+
+                <p class="question-title">سؤال ۷:</p>
+                <p>نمایش <span class="math-ltr">-√۲</span> روی محور.<br>
+                <strong>حل:</strong> مثلث قائم‌الزاویه با اضلاع ۱ و ۱ روی صفر. کمان به سمت <strong>چپ</strong> (منفی).</p>
+
+                <p class="question-title">سؤال ۸:</p>
+                <p>ساده کنید: <span class="math-ltr">|۱ - √۲| + |√۲ - √۳|</span><br>
+                <strong>حل:</strong> اولی منفی (<span class="math-ltr">-۱+√۲</span>)، دومی منفی (<span class="math-ltr">-√۲+√۳</span>). جمع: <strong><span class="math-ltr">-۱ + √۳</span></strong>.</p>
+
+                <p class="question-title">سؤال ۹:</p>
+                <p>اشتراک اعداد گویا و گنگ چیست؟<br>
+                <strong>حل:</strong> <strong><span class="math-ltr">∅</span></strong> (تهی).</p>
+
+                <p class="question-title">سؤال ۱۰:</p>
+                <p>بین ۳ و ۴، چهار عدد گنگ بنویسید.<br>
+                <strong>حل:</strong> <span class="math-ltr">√۱۰, √۱۱, √۱۳, √۱۵</span>.</p>
+
+                <h3>۴. تمرین‌های کلاسی (بدون پاسخ)</h3>
+                <ul>
+                    <li>۱. کدام‌یک گنگ است؟ <span class="math-ltr">A=√۰/۰۴, B=√۲۰, C=۳/۱۴, D=√۵/√۵</span></li>
+                    <li>۲. عدد <span class="math-ltr">۲ + √۳</span> را روی محور نمایش دهید.</li>
+                    <li>۳. حاصل <span class="math-ltr">|π - ۳| + |۳ - π|</span> را بیابید.</li>
+                    <li>۴. کدام درست است؟ (الف: <span class="math-ltr">ℤ ⊆ Q'</span>، ب: <span class="math-ltr">ℝ ⊆ ℚ</span>، ج: <span class="math-ltr">ℚ ∩ Q' = ℝ</span>، د: <span class="math-ltr">ℕ ⊆ ℝ</span>)</li>
+                    <li>۵. بین ۵ و ۶، سه عدد گنگ مثال بزنید.</li>
+                    <li>۶. مجموعه <span class="math-ltr">M = {x ∈ ℝ | x<sup>۲</sup> = ۵}</span> را با اعضا بنویسید.</li>
+                    <li>۷. آیا <span class="math-ltr">√۲ × √۸</span> گویا است؟</li>
+                    <li>۸. تساوی <span class="math-ltr">ℚ ∪ Q' = ...</span> را کامل کنید.</li>
+                    <li>۹. فاصله بین ۲ و ۳ روی محور شامل چند نقطه است؟</li>
+                    <li>۱۰. اگر <span class="math-ltr">x</span> گنگ باشد، آیا <span class="math-ltr">x<sup>۲</sup></span> همواره گویاست؟</li>
+                </ul>
+
+                <h3>۵. تست‌های چهارگزینه‌ای حل‌شده</h3>
+
+                <div class="example-box">
+                    <p><strong>تست ۱:</strong> کدام گزینه صحیح است؟</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) هر عدد حقیقی، گویا است</div>
+                        <div class="test-option">ب) هر عدد گنگ، حقیقی است</div>
+                        <div class="test-option">ج) <span class="math-ltr">ℚ ⊆ Q'</span></div>
+                        <div class="test-option">د) <span class="math-ltr">ℚ ∩ ℝ = ∅</span></div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>ب</strong>. (چون <span class="math-ltr">ℝ</span> شامل گنگ‌ها هم هست).</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۲:</strong> عدد <span class="math-ltr">√۵۰</span> بین کدام دو عدد صحیح است؟</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) ۵ و ۶</div>
+                        <div class="test-option">ب) ۶ و ۷</div>
+                        <div class="test-option">ج) ۷ و ۸</div>
+                        <div class="test-option">د) ۴۹ و ۵۱</div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>ج</strong>. (<span class="math-ltr">√۴۹ < √۵۰ < √۶۴</span>).</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۳:</strong> حاصل <span class="math-ltr">| √۵ - √۷ |</span> کدام است؟</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) <span class="math-ltr">√۵ - √۷</span></div>
+                        <div class="test-option">ب) <span class="math-ltr">√۷ - √۵</span></div>
+                        <div class="test-option">ج) <span class="math-ltr">√۲</span></div>
+                        <div class="test-option">د) <span class="math-ltr">-√۲</span></div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>ب</strong>. (چون داخل قدرمطلق منفی است، قرینه می‌شود).</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۴:</strong> کدام عدد گویا است؟</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) <span class="math-ltr">√۱/۶</span></div>
+                        <div class="test-option">ب) <span class="math-ltr">√۰/۴</span></div>
+                        <div class="test-option">ج) <span class="math-ltr">√۰/۰۹</span></div>
+                        <div class="test-option">د) <span class="math-ltr">π</span></div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>ج</strong>. (<span class="math-ltr">√۰/۰۹ = ۰/۳</span>).</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۵:</strong> عضوی از مجموعه <span class="math-ltr">A = ℝ - ℚ</span>:</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) ۳-</div>
+                        <div class="test-option">ب) ۰</div>
+                        <div class="test-option">ج) <span class="math-ltr">√۹</span></div>
+                        <div class="test-option">د) <span class="math-ltr">√۷</span></div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>د</strong>. (<span class="math-ltr">ℝ - ℚ</span> همان اعداد گنگ است).</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۶:</strong> وتر مثلث قائم‌الزاویه با اضلاع ۲ و ۳ چه طولی دارد؟</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) <span class="math-ltr">√۵</span></div>
+                        <div class="test-option">ب) <span class="math-ltr">√۱۳</span></div>
+                        <div class="test-option">ج) <span class="math-ltr">√۶</span></div>
+                        <div class="test-option">د) ۵</div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>ب</strong>. (<span class="math-ltr">۲<sup>۲</sup> + ۳<sup>۲</sup> = ۱۳</span>).</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۷:</strong> کدام مجموعه تهی است؟</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) <span class="math-ltr">ℤ ∩ ℕ</span></div>
+                        <div class="test-option">ب) <span class="math-ltr">ℚ ∩ ℝ</span></div>
+                        <div class="test-option">ج) <span class="math-ltr">Q' ∩ ℚ</span></div>
+                        <div class="test-option">د) <span class="math-ltr">W - ℕ</span></div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>ج</strong>. (اشتراک گویا و گنگ).</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۸:</strong> حاصل <span class="math-ltr">√۸ / √۲</span>:</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) طبیعی</div>
+                        <div class="test-option">ب) گنگ</div>
+                        <div class="test-option">ج) صحیح منفی</div>
+                        <div class="test-option">د) نامشخص</div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>الف</strong>. (<span class="math-ltr">√۴ = ۲</span>).</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۹:</strong> تعداد اعداد گنگ بین <span class="math-ltr">√۲</span> و <span class="math-ltr">√۳</span>:</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) صفر</div>
+                        <div class="test-option">ب) ۱</div>
+                        <div class="test-option">ج) ۲</div>
+                        <div class="test-option">د) بی‌شمار</div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>د</strong>.</p>
+                </div>
+
+                <div class="example-box">
+                    <p><strong>تست ۱۰:</strong> تعریف <span class="math-ltr">Q'</span>:</p>
+                    <div class="test-options">
+                        <div class="test-option">الف) <span class="math-ltr">{x | x ∈ ℝ, x ∉ ℚ}</span></div>
+                        <div class="test-option">ب) <span class="math-ltr">ℤ</span></div>
+                        <div class="test-option">ج) <span class="math-ltr">ℚ - ℤ</span></div>
+                        <div class="test-option">د) <span class="math-ltr">ℕ</span></div>
+                    </div>
+                    <p><strong>پاسخ:</strong> گزینه <strong>الف</strong>.</p>
+                </div>
+
+                <h3>۶. تست‌های تمرینی (بدون پاسخ)</h3>
+                
+                <div class="simple-test-item">
+                    <span class="test-number">۱.</span> کدام عبارت همیشه درست است؟
+                    <div class="test-options">
+                        <div class="test-option">الف) حاصل ضرب دو عدد گنگ، گنگ است</div>
+                        <div class="test-option">ب) حاصل جمع دو عدد گنگ، گنگ است</div>
+                        <div class="test-option">ج) حاصل ضرب عدد گویا (غیر صفر) در گنگ، گنگ است</div>
+                        <div class="test-option">د) مجذور یک عدد گنگ، گویا است</div>
+                    </div>
+                </div>
+
+                <div class="simple-test-item">
+                    <span class="test-number">۲.</span> عدد <span class="math-ltr">۱-√۵</span> بین کدام دو عدد صحیح است؟
+                    <div class="test-options">
+                        <div class="test-option">الف) ۱ و ۲</div>
+                        <div class="test-option">ب) ۱- و ۲-</div>
+                        <div class="test-option">ج) ۰ و ۱</div>
+                        <div class="test-option">د) ۱- و ۰</div>
+                    </div>
+                </div>
+
+                <div class="simple-test-item">
+                    <span class="test-number">۳.</span> در مجموعه اعداد حقیقی، کدام رابطه برقرار نیست؟
+                    <div class="test-options">
+                        <div class="test-option">الف) <span class="math-ltr">ℕ ⊂ ℝ</span></div>
+                        <div class="test-option">ب) <span class="math-ltr">ℚ ⊂ ℝ</span></div>
+                        <div class="test-option">ج) <span class="math-ltr">Q' ⊂ ℚ</span></div>
+                        <div class="test-option">د) <span class="math-ltr">ℤ ⊂ ℚ</span></div>
+                    </div>
+                </div>
+
+                <div class="simple-test-item">
+                    <span class="test-number">۴.</span> ساده شده‌ی عبارت <span class="math-ltr">|۲ - √۵| + | √۵ - ۲ |</span> چیست؟
+                    <div class="test-options">
+                        <div class="test-option">الف) ۰</div>
+                        <div class="test-option">ب) ۴</div>
+                        <div class="test-option">ج) <span class="math-ltr">۲√۵ - ۴</span></div>
+                        <div class="test-option">د) <span class="math-ltr">۴ - ۲√۵</span></div>
+                    </div>
+                </div>
+
+                <div class="simple-test-item">
+                    <span class="test-number">۵.</span> اگر مساحت مربعی ۱۰ باشد، ضلع آن:
+                    <div class="test-options">
+                        <div class="test-option">الف) گویا است</div>
+                        <div class="test-option">ب) گنگ است</div>
+                        <div class="test-option">ج) صحیح است</div>
+                        <div class="test-option">د) طبیعی است</div>
+                    </div>
+                </div>
+
+                <div class="simple-test-item">
+                    <span class="test-number">۶.</span> کدام عدد بزرگتر است؟
+                    <div class="test-options">
+                        <div class="test-option">الف) <span class="math-ltr">√۱۰</span></div>
+                        <div class="test-option">ب) ۳</div>
+                        <div class="test-option">ج) <span class="math-ltr">π</span></div>
+                        <div class="test-option">د) <span class="math-ltr">√۸</span></div>
+                    </div>
+                </div>
+
+                <div class="simple-test-item">
+                    <span class="test-number">۷.</span> نمایش مجموعه <span class="math-ltr">{x ∈ ℝ | x > ۲}</span> روی محور:
+                    <div class="test-options">
+                        <div class="test-option">الف) دایره توپر روی ۲ و فلش به راست</div>
+                        <div class="test-option">ب) دایره توخالی روی ۲ و فلش به راست</div>
+                        <div class="test-option">ج) دایره توپر روی ۲ و فلش به چپ</div>
+                        <div class="test-option">د) فقط نقطه ۲</div>
+                    </div>
+                </div>
+
+                <div class="simple-test-item">
+                    <span class="test-number">۸.</span> کدام گزینه نشان دهنده یک عدد گنگ است؟
+                    <div class="test-options">
+                        <div class="test-option">الف) اعشاری با دوره گردش</div>
+                        <div class="test-option">ب) کسری صحیح</div>
+                        <div class="test-option">ج) اعشاری نامختوم و نامتناوب</div>
+                        <div class="test-option">د) جذر عدد ۲۵</div>
+                    </div>
+                </div>
+
+                <div class="simple-test-item">
+                    <span class="test-number">۹.</span> حاصل <span class="math-ltr">(√۳ - ۱)(√۳ + ۱)</span> چه نوع عددی است؟
+                    <div class="test-options">
+                        <div class="test-option">الف) گنگ</div>
+                        <div class="test-option">ب) گویا</div>
+                        <div class="test-option">ج) غیر حقیقی</div>
+                        <div class="test-option">د) تعریف نشده</div>
+                    </div>
+                </div>
+
+                <div class="simple-test-item">
+                    <span class="test-number">۱۰.</span> نزدیک‌ترین عدد صحیح به <span class="math-ltr">√۴۰</span>:
+                    <div class="test-options">
+                        <div class="test-option">الف) ۵</div>
+                        <div class="test-option">ب) ۶</div>
+                        <div class="test-option">ج) ۷</div>
+                        <div class="test-option">د) ۸</div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- فوتر (ثابت در تمام صفحات پرینت) -->
+        <footer class="footer-strip w-full px-8 py-3 relative z-20 flex-shrink-0">
+            <div class="flex items-center justify-between text-slate-700 w-full h-14">
+                <div class="flex items-center gap-1 font-bold text-slate-700 text-sm shrink-0 w-1/4">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span class="whitespace-nowrap">مدرس: استاد فراهانی</span>
+                </div>
+                <div class="flex flex-col items-center justify-center flex-1 px-2">
+                    <div class="text-[10px] text-slate-500 font-bold mb-1 text-center leading-tight">
+                        آدرس کانال ما در ایتا، روبیکا، بله و سروش :
+                        <span class="inline-block text-sky-600 whitespace-nowrap">(با کلیک روی آدرس به کانال ما بپیوندید)</span>
+                    </div>
+                    <a href="https://eitaa.com/math_cafe" target="_blank" class="flex items-center gap-2 bg-sky-50 hover:bg-sky-100 px-4 py-1 rounded-full border border-sky-200 transition group w-fit cursor-pointer text-decoration-none shadow-sm">
+                        <span class="w-1.5 h-1.5 rounded-full bg-sky-500 group-hover:animate-ping"></span>
+                        <span class="font-black text-sm dir-ltr text-sky-700" style="direction: ltr;">@math_cafe</span>
+                    </a>
+                </div>
+                <!-- بخش شماره صفحه در پرینت توسط مرورگر و کد @page پر می‌شود -->
+                <div class="flex justify-end shrink-0 w-1/4">
+                    <div class="text-[10px] text-slate-400 font-bold whitespace-nowrap no-print">
+                        
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        const page = document.getElementById('page');
+        const mainContent = document.getElementById('main-content');
+
+        function toggleOrientation() {
+            if (page.classList.contains('portrait')) {
+                page.classList.remove('portrait');
+                page.classList.add('landscape');
+            } else {
+                page.classList.remove('landscape');
+                page.classList.add('portrait');
+            }
+        }
+
+        function togglePattern() {
+            if (mainContent.classList.contains('grid-pattern')) {
+                mainContent.classList.remove('grid-pattern');
+                mainContent.classList.add('line-pattern');
+            } else if (mainContent.classList.contains('line-pattern')) {
+                mainContent.classList.remove('line-pattern');
+                mainContent.classList.add('blank-pattern');
+            } else {
+                mainContent.classList.remove('blank-pattern');
+                mainContent.classList.add('grid-pattern');
+            }
+        }
+
+        function clearContent() {
+            if(confirm('آیا مطمئن هستید که می‌خواهید متن صفحه را پاک کنید؟')) {
+                document.getElementById('ai-output').innerHTML = '';
+            }
+        }
+    </script>
+</body>
+</html>
